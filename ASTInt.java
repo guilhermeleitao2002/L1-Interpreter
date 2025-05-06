@@ -7,7 +7,7 @@ class ASTInt implements ASTNode  {
 
     public IValue eval(Environment<IValue> e) throws InterpreterError
     {
-	// e.crawl();
+	e.crawl();
 	return new VInt(v);                
     }
 
