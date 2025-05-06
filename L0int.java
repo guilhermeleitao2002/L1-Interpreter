@@ -32,7 +32,10 @@ public class L0int {
                 try {
                     System.out.print("# ");
                     exp = parser.Start();
-                    if (exp == null) System.exit(0);
+                    if (exp == null) {
+						System.out.println("exp is null... Exiting");
+						System.exit(0);
+					}
                     IValue v = exp.eval(new Environment<IValue>());
                     System.out.println(v.toStr());
                 } catch (ParseException e) {

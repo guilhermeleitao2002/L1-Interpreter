@@ -124,7 +124,8 @@ ASTNode Seq() :
 {
      t1 = SeqExp() ( ( op=<SEMIC> ) t2 = SeqExp() 
  		 {
-		 /* missing AST build */
+		 /* missing AST build - hopefully not anymore */
+     t1 = new ASTSeq(t1, t2);
      } 
 		)*
      { return t1; }  
@@ -148,7 +149,8 @@ ASTNode BA() :
 {
      t1 = BM() ( ( op=<OR> ) t2 = BM() 
  		 {
-		 /* missing AST build */
+		 /* missing AST build - hopefully not anymore */
+     t1 = new ASTOr(t1,t2);
 		 } 
 		)*
      { return t1; } 
@@ -160,7 +162,8 @@ ASTNode BM() :
 {
      t1 = Rel() ( ( op=<AND> ) t2 = Rel() 
  		 {
-		 /* missing AST build */
+		 /* missing AST build - hopefully not anymore */
+     t1 = new ASTAnd(t1,t2);
  		 } 
 		)*
      { return t1; } 
@@ -173,7 +176,19 @@ ASTNode Rel() :
 {
      t1 = Exp() ( ( op=<EQ> | op=<GT> | op=<LT> | op=<GTEQ> | op=<LTEQ> | op=<DIF>) t2 = Exp() 
      	  	  {
-		 /* missing AST build */
+		 /* missing AST build - hopefully not anymore */
+     if (op.kind == EQ) 
+                   t1 = new ASTEquals(t1,t2);
+             else if (op.kind == GT) 
+                   t1 = new ASTGreaterThan(t1,t2);
+             else if (op.kind == LT) 
+                   t1 = new ASTLessThan(t1,t2);
+             else if (op.kind == GTEQ) 
+                   t1 = new ASTGreaterEqual(t1,t2);
+             else if (op.kind == LTEQ) 
+                   t1 = new ASTLessEqual(t1,t2);
+             else if (op.kind == DIF) 
+                   t1 = new ASTNotEqual(t1,t2);
 		   } 
 		)?
      { return t1; } 

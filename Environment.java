@@ -10,7 +10,8 @@ public class Environment <E>{
     }
     
     Environment(Environment<E> ancestor){
-	// code missing
+        anc = ancestor;
+        bindings = new HashMap<String,E>();
     }
 
     Environment<E> beginScope(){
@@ -22,16 +23,27 @@ public class Environment <E>{
     }
 
     void assoc(String id, E bind) throws InterpreterError {
-	// code missing
+        if (bindings.containsKey(id)) {
+            throw new InterpreterError("Identifier " + id + " already bound in this scope");
+        }
+        bindings.put(id, bind);
     }
 
-    void update(String id, E bind)  {
-	// code missing
+    void update(String id, E bind) {
+        if (bindings.containsKey(id)) {
+            bindings.put(id, bind);
+        } else if (anc != null) {
+            anc.update(id, bind);
+        }
     }
-
 
     E find(String id) throws InterpreterError {
-	// code missing
+        if (bindings.containsKey(id)) {
+            return bindings.get(id);
+        } else if (anc != null) {
+            return anc.find(id);
+        } else {
+            throw new InterpreterError("Unbound identifier: " + id);
+        }
     }
-
 }
