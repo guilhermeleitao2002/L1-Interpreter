@@ -1,0 +1,237 @@
+PARSER_BEGIN(Parser)
+
+import java.util.*;
+
+public class Parser {
+}
+
+PARSER_END(Parser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+| "\n"
+}
+
+TOKEN :
+{
+
+  < LET : "let" >
+  |
+  < TRUE: "true" >
+  |
+  < FALSE: "false" >
+  |
+  < PLUS : "+" >
+  |
+  < MINUS : "-">
+  |
+  < STAR : "*">
+  |
+  < DIV : "/">
+  |
+  < LPAR : "(" >
+  |
+  < RPAR : ")" >
+  |
+  < LBRA : "{" >
+  |
+  < RBRA : "}" >
+  |
+  < EQUAL : "=" >
+  |
+  < COLON : ":" >
+  |
+  < SEMIC : ";" >
+  |
+  < TERM : ";;" >
+  |
+  < COMMA : "," >
+  |
+  < AND : "&&" >
+  |
+  < OR : "||" >
+  |
+  < EQ : "==" >
+  |  
+  < GT : ">" >
+  |
+  < LT : "<" >
+  |
+  < GTEQ : ">=" >
+  |
+  < LTEQ : "<=" >
+  |
+  < DIF : "~=" >
+  |
+  < NOT : "~" >
+  |
+  < ASSIGN : ":=" >
+  |
+  < BOX : "box" >
+  |
+  < IF : "if" >
+  |
+  < ELSE : "else" >
+  |
+  < WHILE : "while" >
+  |
+  < PRINT : "print" >
+  |
+  < PRINTLN : "println" >
+  |
+  < FN : "fn" >
+  |
+  <ARROW : "=>">
+  |
+  < String: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"" >
+  |
+  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  |
+  < Num: (["0"-"9"]) + >
+}
+
+ASTNode Start():
+{ ASTNode t; }
+{
+    <EOF> {return null;}
+  | t = Let() <TERM> { return t; }
+}
+
+ASTNode Let() :
+{ Token n; 
+  ASTNode t, e1, e2;
+  List<Bind> decls  = new ArrayList<Bind>();;
+}
+{ 
+    (
+    t = Seq()
+    |
+    ((<LET>  n=<Id>  <EQUAL> e1 = BA() <SEMIC>
+      { decls.add(new Bind(n.image,e1)); }
+     )+
+        e2 = Seq() { t = new ASTLet(decls, e2); })
+    )
+    
+   { return t; }
+}
+
+ASTNode Seq() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = SeqExp() ( ( op=<SEMIC> ) t2 = SeqExp() 
+ 		 {
+		 /* missing AST build */
+     } 
+		)*
+     { return t1; }  
+}
+
+ASTNode SeqExp() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = BA() ( ( op=<ASSIGN> ) t2 = BA() 
+ 		 {
+		 /* missing AST build */
+     } 
+		)*
+     { return t1; }  
+}
+
+ASTNode BA() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = BM() ( ( op=<OR> ) t2 = BM() 
+ 		 {
+		 /* missing AST build */
+		 } 
+		)*
+     { return t1; } 
+}
+
+ASTNode BM() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = Rel() ( ( op=<AND> ) t2 = Rel() 
+ 		 {
+		 /* missing AST build */
+ 		 } 
+		)*
+     { return t1; } 
+}
+
+
+ASTNode Rel() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = Exp() ( ( op=<EQ> | op=<GT> | op=<LT> | op=<GTEQ> | op=<LTEQ> | op=<DIF>) t2 = Exp() 
+     	  	  {
+		 /* missing AST build */
+		   } 
+		)?
+     { return t1; } 
+}
+
+
+ASTNode Exp() :
+{ Token op;
+  ASTNode t1, t2; }
+{
+     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() 
+                 { if (op.kind == PLUS) 
+                         t1 = new ASTPlus(t1,t2);
+                   else  t1 = new ASTSub(t1,t2);
+                 } 
+               ) *
+     { return t1; } 
+}
+
+ASTNode Term() :
+{Token op;
+  ASTNode t1, t2;}
+{
+     t1 = Fact() (
+     	  	 op=<STAR> t2 = Fact()   { t1 = new ASTMult(t1,t2); }
+		 |
+		 op=<DIV> t2 = Fact()  { t1 = new ASTDiv(t1,t2); }
+		 |
+		 op = <LPAR> t2 = Exp () <RPAR>  { /* TBC */ } 
+		)*
+     { return t1; } 
+}
+
+
+ASTNode Fact() :
+{ Token n; 
+  ASTNode t, e1, e2;
+  List<Bind> decls;
+  ASTNode  body, alt;
+}
+{
+   (
+      n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
+    | n=<TRUE> { /* missing AST for true */; t = null; }
+    | n=<FALSE> {  /* missing AST for false */; t = null;}
+    | n=<Id> { t = new ASTId(n.image); } 
+    | <BOX> t=Fact() { /* missing AST for box */; t = null; }
+    | <STAR> t=Fact() { /* missing AST for deref */; t = null; }
+    | <MINUS> t=Fact() { t = new ASTNeg(t); }
+    | <NOT> t=Fact() {  /* missing AST for not */; t = null;  }
+    | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> {/* TBC */ t = null; }
+    | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { /* TBC */ t = null; }
+    | <FN> n=<Id> { t = null; }
+      	   	  (<COMMA> n = <Id>  {/* TBC */ })*
+		  <ARROW> <LBRA> e2 = Let() <RBRA> { /* TBC */ }
+    | <PRINT> t=Fact() { /* missing AST for print */; t = null;  }
+    | <PRINTLN> t=Fact() {/* missing AST for println */; t = null;  }
+    | <LPAR> t=Let() <RPAR> 
+    )
+   { return t; }
+}
