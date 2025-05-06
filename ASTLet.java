@@ -11,7 +11,7 @@ public class ASTLet implements ASTNode {
 	    ASTNode exp =  p.getExp();
 	    en.assoc(id, exp.eval(en));
 	};
-	en.crawl();
+	// en.crawl();
 	System.out.println("go body");
 	return body.eval(en);
     }
