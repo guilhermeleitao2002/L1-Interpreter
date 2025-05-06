@@ -232,13 +232,13 @@ ASTNode Fact() :
 {
    (
       n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
-    | n=<TRUE> { /* missing AST for true */; t = null; }
-    | n=<FALSE> {  /* missing AST for false */; t = null;}
+    | n=<TRUE> { /* missing AST for true */; t = new ASTTrue(); }
+    | n=<FALSE> {  /* missing AST for false */; t = new ASTFalse();}
     | n=<Id> { t = new ASTId(n.image); } 
     | <BOX> t=Fact() { /* missing AST for box */; t = null; }
     | <STAR> t=Fact() { /* missing AST for deref */; t = null; }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
-    | <NOT> t=Fact() {  /* missing AST for not */; t = null;  }
+    | <NOT> t=Fact() {  /* missing AST for not */; t = new ASTNot(t);  }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> {/* TBC */ t = null; }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { /* TBC */ t = null; }
     | <FN> n=<Id> { t = null; }

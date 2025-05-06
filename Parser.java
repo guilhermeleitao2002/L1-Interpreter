@@ -343,12 +343,12 @@ t = new ASTInt(Integer.parseInt(n.image));
       }
     case TRUE:{
       n = jj_consume_token(TRUE);
-/* missing AST for true */; t = null;
+/* missing AST for true */; t = new ASTTrue();
       break;
       }
     case FALSE:{
       n = jj_consume_token(FALSE);
-/* missing AST for false */; t = null;
+/* missing AST for false */; t = new ASTFalse();
       break;
       }
     case Id:{
@@ -377,7 +377,7 @@ t = new ASTNeg(t);
     case NOT:{
       jj_consume_token(NOT);
       t = Fact();
-/* missing AST for not */; t = null;
+/* missing AST for not */; t = new ASTNot(t);
       break;
       }
     case IF:{

@@ -46,4 +46,15 @@ public class Environment <E>{
             throw new InterpreterError("Unbound identifier: " + id);
         }
     }
+
+    public void crawl() {
+    System.out.println("Current environment:");
+    for (Map.Entry<String, E> entry : bindings.entrySet()) {
+        System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
+    }
+    if (anc != null) {
+        System.out.println("Parent environment:");
+        anc.crawl();
+    }
+}
 }
