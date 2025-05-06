@@ -1,0 +1,7 @@
+let x = 10;
+let y = let a = 5;
+        let b = 7;
+        a + b + x;
+let z = (y > 15) && (x < 20);
+z
+;;
