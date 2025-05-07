@@ -224,7 +224,7 @@ t1 = new ASTAnd(t1, t2);
 if (op.kind == EQ) {
                t1 = new ASTEqual(t1, t2);
              } else if (op.kind == GT) {
-               t1 = new ASTGreater(t1, t2);
+               t1 = new ASTGreaterThan(t1, t2);
              } else if (op.kind == GTEQ) {
                t1 = new ASTGreaterEqual(t1, t2);
              } else if (op.kind == LT) {
