@@ -8,9 +8,7 @@ public	class ASTId implements ASTNode	{
 
     public IValue eval(Environment<IValue> env)	throws
     InterpreterError {
-	System.out.println("Env "+env);
-	env.crawl();
-        return env.find(id);	
+    return env.find(id);	
     }
 
 }	

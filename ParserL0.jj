@@ -124,8 +124,7 @@ ASTNode Seq() :
 {
      t1 = SeqExp() ( ( op=<SEMIC> ) t2 = SeqExp() 
  		 {
-		 /* missing AST build - hopefully not anymore */
-     t1 = new ASTSeq(t1, t2);
+		 /* missing AST build */
      } 
 		)*
      { return t1; }  
@@ -149,8 +148,7 @@ ASTNode BA() :
 {
      t1 = BM() ( ( op=<OR> ) t2 = BM() 
  		 {
-		 /* missing AST build - hopefully not anymore */
-     t1 = new ASTOr(t1,t2);
+		 /* missing AST build */
 		 } 
 		)*
      { return t1; } 
@@ -162,8 +160,7 @@ ASTNode BM() :
 {
      t1 = Rel() ( ( op=<AND> ) t2 = Rel() 
  		 {
-		 /* missing AST build - hopefully not anymore */
-     t1 = new ASTAnd(t1,t2);
+		 /* missing AST build */
  		 } 
 		)*
      { return t1; } 
@@ -176,19 +173,7 @@ ASTNode Rel() :
 {
      t1 = Exp() ( ( op=<EQ> | op=<GT> | op=<LT> | op=<GTEQ> | op=<LTEQ> | op=<DIF>) t2 = Exp() 
      	  	  {
-		 /* missing AST build - hopefully not anymore */
-     if (op.kind == EQ) 
-                   t1 = new ASTEquals(t1,t2);
-             else if (op.kind == GT) 
-                   t1 = new ASTGreaterThan(t1,t2);
-             else if (op.kind == LT) 
-                   t1 = new ASTLessThan(t1,t2);
-             else if (op.kind == GTEQ) 
-                   t1 = new ASTGreaterEqual(t1,t2);
-             else if (op.kind == LTEQ) 
-                   t1 = new ASTLessEqual(t1,t2);
-             else if (op.kind == DIF) 
-                   t1 = new ASTNotEqual(t1,t2);
+		 /* missing AST build */
 		   } 
 		)?
      { return t1; } 
@@ -232,13 +217,13 @@ ASTNode Fact() :
 {
    (
       n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
-    | n=<TRUE> { /* missing AST for true */; t = new ASTTrue(); }
-    | n=<FALSE> {  /* missing AST for false */; t = new ASTFalse();}
+    | n=<TRUE> { /* missing AST for true */; t = null; }
+    | n=<FALSE> {  /* missing AST for false */; t = null;}
     | n=<Id> { t = new ASTId(n.image); } 
     | <BOX> t=Fact() { /* missing AST for box */; t = null; }
     | <STAR> t=Fact() { /* missing AST for deref */; t = null; }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
-    | <NOT> t=Fact() {  /* missing AST for not */; t = new ASTNot(t);  }
+    | <NOT> t=Fact() {  /* missing AST for not */; t = null;  }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> {/* TBC */ t = null; }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { /* TBC */ t = null; }
     | <FN> n=<Id> { t = null; }

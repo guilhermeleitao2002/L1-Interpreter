@@ -108,8 +108,7 @@ t = new ASTLet(decls, e2);
       }
       op = jj_consume_token(SEMIC);
       t2 = SeqExp();
-/* missing AST build - hopefully not anymore */
-     t1 = new ASTSeq(t1, t2);
+
     }
 {if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
@@ -153,8 +152,7 @@ t = new ASTLet(decls, e2);
       }
       op = jj_consume_token(OR);
       t2 = BM();
-/* missing AST build - hopefully not anymore */
-     t1 = new ASTOr(t1,t2);
+
     }
 {if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
@@ -176,8 +174,7 @@ t = new ASTLet(decls, e2);
       }
       op = jj_consume_token(AND);
       t2 = Rel();
-/* missing AST build - hopefully not anymore */
-     t1 = new ASTAnd(t1,t2);
+
     }
 {if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
@@ -224,19 +221,7 @@ t = new ASTLet(decls, e2);
         throw new ParseException();
       }
       t2 = Exp();
-/* missing AST build - hopefully not anymore */
-     if (op.kind == EQ)
-                   t1 = new ASTEquals(t1,t2);
-             else if (op.kind == GT)
-                   t1 = new ASTGreaterThan(t1,t2);
-             else if (op.kind == LT)
-                   t1 = new ASTLessThan(t1,t2);
-             else if (op.kind == GTEQ)
-                   t1 = new ASTGreaterEqual(t1,t2);
-             else if (op.kind == LTEQ)
-                   t1 = new ASTLessEqual(t1,t2);
-             else if (op.kind == DIF)
-                   t1 = new ASTNotEqual(t1,t2);
+
       break;
       }
     default:
@@ -343,12 +328,12 @@ t = new ASTInt(Integer.parseInt(n.image));
       }
     case TRUE:{
       n = jj_consume_token(TRUE);
-/* missing AST for true */; t = new ASTTrue();
+/* missing AST for true */; t = null;
       break;
       }
     case FALSE:{
       n = jj_consume_token(FALSE);
-/* missing AST for false */; t = new ASTFalse();
+/* missing AST for false */; t = null;
       break;
       }
     case Id:{
@@ -377,7 +362,7 @@ t = new ASTNeg(t);
     case NOT:{
       jj_consume_token(NOT);
       t = Fact();
-/* missing AST for not */; t = new ASTNot(t);
+/* missing AST for not */; t = null;
       break;
       }
     case IF:{
