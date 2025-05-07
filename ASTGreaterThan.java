@@ -1,4 +1,4 @@
-public class ASTGreater implements ASTNode {
+public class ASTGreaterThan implements ASTNode {
     ASTNode lhs, rhs;
 
     public IValue eval(Environment<IValue> e) throws InterpreterError {
@@ -11,7 +11,7 @@ public class ASTGreater implements ASTNode {
         throw new InterpreterError("Type error: > requires numeric operands");
     }
 
-    public ASTGreater(ASTNode l, ASTNode r) {
+    public ASTGreaterThan(ASTNode l, ASTNode r) {
         lhs = l;
         rhs = r;
     }

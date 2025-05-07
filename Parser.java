@@ -227,9 +227,11 @@ if (op.kind == EQ) {
                t1 = new ASTGreater(t1, t2);
              } else if (op.kind == GTEQ) {
                t1 = new ASTGreaterEqual(t1, t2);
+             } else if (op.kind == LT) {
+               t1 = new ASTLowerThan(t1, t2);
+             } else if (op.kind == LTEQ) {
+               t1 = new ASTLowerEqual(t1, t2);
              }
-             // Note: LT, LTEQ, and DIF are not implemented as of now
-
       break;
       }
     default:
