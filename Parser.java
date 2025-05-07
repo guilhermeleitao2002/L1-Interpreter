@@ -152,7 +152,7 @@ t = new ASTLet(decls, e2);
       }
       op = jj_consume_token(OR);
       t2 = BM();
-
+t1 = new ASTOr(t1, t2);
     }
 {if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
@@ -174,7 +174,7 @@ t = new ASTLet(decls, e2);
       }
       op = jj_consume_token(AND);
       t2 = Rel();
-
+t1 = new ASTAnd(t1, t2);
     }
 {if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
@@ -221,6 +221,14 @@ t = new ASTLet(decls, e2);
         throw new ParseException();
       }
       t2 = Exp();
+if (op.kind == EQ) {
+               t1 = new ASTEqual(t1, t2);
+             } else if (op.kind == GT) {
+               t1 = new ASTGreater(t1, t2);
+             } else if (op.kind == GTEQ) {
+               t1 = new ASTGreaterEqual(t1, t2);
+             }
+             // Note: LT, LTEQ, and DIF are not implemented as of now
 
       break;
       }
@@ -328,12 +336,12 @@ t = new ASTInt(Integer.parseInt(n.image));
       }
     case TRUE:{
       n = jj_consume_token(TRUE);
-/* missing AST for true */; t = null;
+t = new ASTTrue();
       break;
       }
     case FALSE:{
       n = jj_consume_token(FALSE);
-/* missing AST for false */; t = null;
+t = new ASTFalse();
       break;
       }
     case Id:{
@@ -362,7 +370,7 @@ t = new ASTNeg(t);
     case NOT:{
       jj_consume_token(NOT);
       t = Fact();
-/* missing AST for not */; t = null;
+t = new ASTNot(t);
       break;
       }
     case IF:{
@@ -375,7 +383,7 @@ t = new ASTNeg(t);
       jj_consume_token(LBRA);
       e2 = Let();
       jj_consume_token(RBRA);
-/* TBC */ t = null;
+t = new ASTIf(t, e1, e2);
       break;
       }
     case WHILE:{
