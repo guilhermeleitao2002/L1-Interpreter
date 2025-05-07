@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class VClosure implements IValue {
     private Environment<IValue> env;
     private List<String> params;
