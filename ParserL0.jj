@@ -236,12 +236,27 @@ ASTNode Fact() :
     | <NOT> t=Fact() { t = new ASTNot(t); }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { /* TBC */ t = null; }
-    | <FN> n=<Id> { t = null; }
-      	   	  (<COMMA> n = <Id>  {/* TBC */ })*
-		  <ARROW> <LBRA> e2 = Let() <RBRA> { /* TBC */ }
+    | <FN> n=<Id> 
+      {
+          List<String> params = new ArrayList<String>();
+          params.add(n.image);
+      }
+      (<COMMA> n = <Id>  { params.add(n.image); })*
+      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
     | <PRINT> t=Fact() { /* missing AST for print */; t = null;  }
     | <PRINTLN> t=Fact() {/* missing AST for println */; t = null;  }
     | <LPAR> t=Let() <RPAR> 
+    | t=Fact() <LPAR> /* I'M NOT SURE ABOUT THIS */
+      {
+          List<ASTNode> args = new ArrayList<ASTNode>();
+          e1 = BA();
+          args.add(e1);
+      }
+      (<COMMA> e1 = BA() { args.add(e1); })*
+      <RPAR>
+      {
+          t = new ASTApp(t, args);
+      }
     )
    { return t; }
 }

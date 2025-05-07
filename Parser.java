@@ -400,7 +400,8 @@ t = new ASTIf(t, e1, e2);
     case FN:{
       jj_consume_token(FN);
       n = jj_consume_token(Id);
-t = null;
+List<String> params = new ArrayList<String>();
+          params.add(n.image);
       label_8:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -414,13 +415,13 @@ t = null;
         }
         jj_consume_token(COMMA);
         n = jj_consume_token(Id);
-
+params.add(n.image);
       }
       jj_consume_token(ARROW);
       jj_consume_token(LBRA);
       e2 = Let();
       jj_consume_token(RBRA);
-
+t = new ASTFun(params, e2);
       break;
       }
     case PRINT:{
