@@ -401,7 +401,7 @@ t = new ASTIf(t, e1, e2);
       jj_consume_token(FN);
       n = jj_consume_token(Id);
 List<String> params = new ArrayList<String>();
-          params.add(n.image);
+        params.add(n.image);
       label_8:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -438,8 +438,16 @@ t = new ASTFun(params, e2);
       }
     case LPAR:{
       jj_consume_token(LPAR);
+      jj_consume_token(LPAR);
       t = Let();
       jj_consume_token(RPAR);
+      jj_consume_token(LPAR);
+      e1 = BA();
+      jj_consume_token(RPAR);
+      jj_consume_token(RPAR);
+List<ASTNode> args = new ArrayList<ASTNode>();
+        args.add(e1);
+        t = new ASTApp(t, args);
       break;
       }
     default:
