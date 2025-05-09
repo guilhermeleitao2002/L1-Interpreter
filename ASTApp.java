@@ -10,30 +10,36 @@ public class ASTApp implements ASTNode {
     }
     
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        // Evaluate the function expression to get a closure
-        IValue funValue = function.eval(e);
-        if (!(funValue instanceof VClosure)) {
-            throw new InterpreterError("Function application requires a function");
+        // Start with the function
+        IValue currentValue = function.eval(e);
+        
+        // Apply each argument one at a time (currying)
+        for (ASTNode arg : arguments) {
+            if (!(currentValue instanceof VClosure)) {
+                throw new InterpreterError("Function application requires a function");
+            }
+            
+            VClosure closure = (VClosure) currentValue;
+            List<String> params = closure.getParams();
+            
+            // Each function should take exactly one parameter in this language
+            if (params.size() != 1) {
+                throw new InterpreterError("Function must take exactly one parameter");
+            }
+            
+            // Evaluate the argument
+            IValue argValue = arg.eval(e);
+            
+            // Create a new environment for function execution
+            Environment<IValue> funEnv = closure.getEnv().beginScope();
+            
+            // Bind the parameter to the argument
+            funEnv.assoc(params.get(0), argValue);
+            
+            // Evaluate the function body in the new environment
+            currentValue = closure.getBody().eval(funEnv);
         }
         
-        VClosure closure = (VClosure) funValue;
-        
-        // Check if number of arguments matches number of parameters
-        List<String> params = closure.getParams();
-        if (params.size() != arguments.size()) {
-            throw new InterpreterError("Function application with wrong number of arguments");
-        }
-        
-        // Create a new environment for function execution
-        Environment<IValue> funEnv = closure.getEnv().beginScope();
-        
-        // Evaluate each argument and bind it to the corresponding parameter
-        for (int i = 0; i < params.size(); i++) {
-            IValue argValue = arguments.get(i).eval(e);
-            funEnv.assoc(params.get(i), argValue);
-        }
-        
-        // Evaluate the function body in the new environment
-        return closure.getBody().eval(funEnv);
+        return currentValue;
     }
 }

@@ -11,7 +11,27 @@ public class ASTFun implements ASTNode {
     }
     
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        // Create a closure with the current environment and function parameters/body
+        // If there are multiple parameters, transform into nested single-parameter functions
+        if (params.size() > 1) {
+            // The innermost function (with the last parameter)
+            List<String> lastParam = new ArrayList<>();
+            lastParam.add(params.get(params.size() - 1));
+            ASTNode currentBody = body;
+            
+            // Build nested functions from inside out
+            for (int i = params.size() - 2; i >= 0; i--) {
+                List<String> currentParam = new ArrayList<>();
+                currentParam.add(params.get(i));
+                ASTNode innerFun = new ASTFun(lastParam, currentBody);
+                currentBody = innerFun;
+                lastParam = currentParam;
+            }
+            
+            // Return the outermost function
+            return new VClosure(e, lastParam, currentBody);
+        }
+        
+        // Single parameter case (base case for the curried functions)
         return new VClosure(e, params, body);
     }
 }
