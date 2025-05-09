@@ -5,20 +5,19 @@ public class ASTLet implements ASTNode {
     ASTNode body;
 
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        Environment<IValue> en = e.beginScope();
+        // Start with the original environment
+        Environment<IValue> newEnv = e.beginScope();
         
-        // Evaluate each declaration and add to environment
+        // Process each binding sequentially
         for (Bind decl : decls) {
-            IValue val = decl.getExp().eval(e);
-            en.assoc(decl.getId(), val);
+            // Evaluate the expression in the current environment
+            IValue val = decl.getExp().eval(newEnv);
+            // Add the binding to the current environment
+            newEnv.assoc(decl.getId(), val);
         }
         
-        // Evaluate body in the new environment
-        IValue result = body.eval(en);
-        
-        // Return to the outer scope (though the result is already captured)
-        // This is not strictly necessary but good practice
-        en.endScope();
+        // Evaluate the body in the final environment
+        IValue result = body.eval(newEnv);
         
         return result;
     }
