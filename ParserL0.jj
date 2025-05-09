@@ -252,17 +252,14 @@ ASTNode Fact() :
       <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
     | <PRINT> t=Fact() { t = new ASTPrint(t, false); }
     | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
-    | <LPAR> 
-      (
-        <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
-        {
-          args.clear();
-          args.add(e1);
-          t = new ASTApp(t, args);
-        }
-        |
-        t=Let() <RPAR>
-      )
+    | LOOKAHEAD(3) <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
+      {
+        args.clear();
+        args.add(e1);
+        t = new ASTApp(t, args);
+      }
+    | LOOKAHEAD(3) <LPAR> t=Let() <RPAR>
+    | <LPAR> t=BA() <RPAR>
     )
    { return t; }
 }
