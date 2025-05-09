@@ -1,4 +1,3 @@
-// VList.java
 public class VList implements IValue {
     private final IValue head;
     private final IValue tail;
