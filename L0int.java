@@ -10,11 +10,7 @@ public class L0int {
 				exp = parser.Start();
 				if (exp==null) System.exit(0);
 				IValue v = exp.eval(new Environment<IValue>());
-				// This is just to avoid printing the
-				// result of an already print statement
-				if (!endsWithPrint(exp)) {
-                    System.out.println(v.toStr());
-                }
+				System.out.println(v.toStr());
 			} catch (ParseException e) {
 				System.out.println("Syntax Error:\n" + e);
 				parser.ReInit(System.in);
