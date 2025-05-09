@@ -14,22 +14,22 @@ public class Environment <E>{
         bindings = new HashMap<String,E>();
     }
 
-    Environment<E> beginScope(){
+    public Environment<E> beginScope(){
         return new Environment<E>(this);
     }
     
-    Environment<E> endScope(){
+    public Environment<E> endScope(){
         return anc;
     }
 
-    void assoc(String id, E bind) throws InterpreterError {
+    public void assoc(String id, E bind) throws InterpreterError {
         if (bindings.containsKey(id)) {
             throw new InterpreterError("Variable " + id + " already defined in this scope");
         }
         bindings.put(id, bind);
     }
 
-    E find(String id) throws InterpreterError {
+    public E find(String id) throws InterpreterError {
         E value = bindings.get(id);
         if (value != null) {
             return value;
