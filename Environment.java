@@ -37,6 +37,7 @@ public class Environment <E>{
         if (anc != null) {
             return anc.find(id);
         }
+        
         throw new InterpreterError("Variable " + id + " not found");
     }
 }
