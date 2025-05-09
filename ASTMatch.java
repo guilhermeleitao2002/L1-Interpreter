@@ -1,9 +1,9 @@
 public class ASTMatch implements ASTNode {
-    private ASTNode expr;
-    private ASTNode nilCase;
-    private String headVar;
-    private String tailVar;
-    private ASTNode consCase;
+    private final ASTNode expr;
+    private final ASTNode nilCase;
+    private final String headVar;
+    private final String tailVar;
+    private final ASTNode consCase;
     
     public ASTMatch(ASTNode expr, ASTNode nilCase, String headVar, String tailVar, ASTNode consCase) {
         this.expr = expr;
@@ -13,17 +13,17 @@ public class ASTMatch implements ASTNode {
         this.consCase = consCase;
     }
     
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         IValue value = expr.eval(e);
         
-        if (value instanceof VList) {
-            VList list = (VList) value;
-            if (list.isNil()) {
+        if (value instanceof VList vList) {
+            if (vList.isNil()) {
                 return nilCase.eval(e);
             } else {
-                Environment<IValue> newEnv = e.beginScope();
-                newEnv.assoc(headVar, list.getHead());
-                newEnv.assoc(tailVar, list.getTail());
+                final Environment<IValue> newEnv = e.beginScope();
+                newEnv.assoc(headVar, vList.getHead());
+                newEnv.assoc(tailVar, vList.getTail());
                 return consCase.eval(newEnv);
             }
         } else {

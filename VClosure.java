@@ -1,10 +1,9 @@
 import java.util.List;
-import java.util.ArrayList;
 
 public class VClosure implements IValue {
-    private Environment<IValue> env;
-    private List<String> params;
-    private ASTNode body;
+    private final Environment<IValue> env;
+    private final List<String> params;
+    private final ASTNode body;
     
     public VClosure(Environment<IValue> env, List<String> params, ASTNode body) {
         this.env = env;
@@ -13,18 +12,19 @@ public class VClosure implements IValue {
     }
     
     public Environment<IValue> getEnv() {
-        return env;
+        return this.env;
     }
     
     public List<String> getParams() {
-        return params;
+        return this.params;
     }
     
     public ASTNode getBody() {
-        return body;
+        return this.body;
     }
     
-    public String toStr() {
+    @Override
+    public final String toStr() {
         return "<function>";
     }
 }

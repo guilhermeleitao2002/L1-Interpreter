@@ -1,25 +1,25 @@
 import java.util.*;
 
 public class Environment <E>{
-    Environment<E> anc;
-    Map<String, E> bindings;
+    final Environment<E> anc;
+    final Map<String, E> bindings;
 
     Environment(){
-        anc = null;
-        bindings = new HashMap<String,E>();
+        this.anc = null;
+        this.bindings = new HashMap<>();
     }
     
     Environment(Environment<E> ancestor){
-        anc = ancestor;
-        bindings = new HashMap<String,E>();
+        this.anc = ancestor;
+        this.bindings = new HashMap<>();
     }
 
     public Environment<E> beginScope(){
-        return new Environment<E>(this);
+        return new Environment<>(this);
     }
     
     public Environment<E> endScope(){
-        return anc;
+        return this.anc;
     }
 
     public void assoc(String id, E bind) throws InterpreterError {
@@ -30,12 +30,12 @@ public class Environment <E>{
     }
 
     public E find(String id) throws InterpreterError {
-        E value = bindings.get(id);
+        final E value = bindings.get(id);
         if (value != null) {
             return value;
         }
-        if (anc != null) {
-            return anc.find(id);
+        if (this.anc != null) {
+            return this.anc.find(id);
         }
         
         throw new InterpreterError("Variable " + id + " not found");

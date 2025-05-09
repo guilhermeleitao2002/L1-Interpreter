@@ -1,15 +1,16 @@
-class VInt implements IValue {
-    int v;
+public class VInt implements IValue {
+    private final int v;
 
-    VInt(int v0) {
-        v = v0;
+    public VInt(int v0) {
+        this.v = v0;
     }
 
-    int getval() {
-        return v;
+    public int getVal() {
+        return this.v;
     }
 
-    public String toStr() {
-        return Integer.toString(v);
+    @Override
+    public final String toStr() {
+        return Integer.toString(this.v);
     }
 }

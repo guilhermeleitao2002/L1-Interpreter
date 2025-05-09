@@ -1,12 +1,13 @@
 public class ASTBox implements ASTNode {
-    private ASTNode expr;
+    private final ASTNode expr;
     
     public ASTBox(ASTNode expr) {
         this.expr = expr;
     }
     
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        IValue value = expr.eval(e);
+        final IValue value = expr.eval(e);
         return new VRef(value);
     }
 }

@@ -5,16 +5,16 @@ public class VRef implements IValue {
         this.value = initialValue;
     }
     
-    public IValue getValue() {
-        return value;
+    public final IValue getValue() {
+        return this.value;
     }
     
-    public void setValue(IValue newValue) {
+    public final void setValue(IValue newValue) {
         this.value = newValue;
     }
     
     @Override
-    public String toStr() {
-        return "<ref: " + value.toStr() + ">";
+    public final String toStr() {
+        return "<ref: " + this.value.toStr() + ">";
     }
 }

@@ -1,15 +1,16 @@
 public class VBool implements IValue {
-    private boolean value;
+    private final boolean value;
 
     public VBool(boolean v) {
-        value = v;
+        this.value = v;
     }
 
     public boolean getValue() {
         return value;
     }
 
-    public String toStr() {
-        return Boolean.toString(value);
+    @Override
+    public final String toStr() {
+        return Boolean.toString(this.value);
     }
 }

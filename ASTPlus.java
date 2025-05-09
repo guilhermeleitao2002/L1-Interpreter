@@ -1,21 +1,21 @@
 public class ASTPlus implements ASTNode {
+        private final ASTNode lhs;
+        private final ASTNode rhs;
 
-        ASTNode lhs, rhs;
+        public ASTPlus(ASTNode l, ASTNode r) {
+                this.lhs = l;
+                this.rhs = r;
+        }
 
+        @Override
         public IValue eval(Environment<IValue> e) throws InterpreterError {
-                IValue v1 = lhs.eval(e);
-                IValue v2 = rhs.eval(e);
+                final IValue v1 = lhs.eval(e);
+                final IValue v2 = rhs.eval(e);
                 
                 if (v1 instanceof VInt && v2 instanceof VInt) {
-                        return new VInt(((VInt) v1).getval() + ((VInt) v2).getval());
+                        return new VInt(((VInt) v1).getVal() + ((VInt) v2).getVal());
                 } else {
                         throw new InterpreterError("Type error: + requires integer operands");
                 }
         }
-
-        public ASTPlus(ASTNode l, ASTNode r) {
-                lhs = l;
-                rhs = r;
-        }
-
 }

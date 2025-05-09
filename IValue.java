@@ -1,3 +1,3 @@
-interface IValue { /* represents values */
+public interface IValue { /* represents values */
     String toStr();
 }

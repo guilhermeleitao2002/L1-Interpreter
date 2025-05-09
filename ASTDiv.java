@@ -1,22 +1,22 @@
 public class ASTDiv implements ASTNode {
-
-    ASTNode lhs, rhs;
-
-    public IValue eval(Environment<IValue> e) throws InterpreterError {
-	IValue v1 = lhs.eval(e);
-	IValue v2 = rhs.eval(e);
-	if (v1 instanceof VInt && v2 instanceof VInt) {
-	    int i1 = ((VInt) v1).getval();
-	    int i2 = ((VInt) v2).getval();
-	    return new VInt(i1 / i2);
-	} else {
-	    throw new InterpreterError("illegal types to / operator");
-	}
-    }
+    private final ASTNode lhs;
+    private final ASTNode rhs;
 
     public ASTDiv(ASTNode l, ASTNode r) {
-	lhs = l;
-	rhs = r;
+		this.lhs = l;
+		this.rhs = r;
     }
 
+    @Override
+    public IValue eval(Environment<IValue> e) throws InterpreterError {
+		final IValue v1 = lhs.eval(e);
+		final IValue v2 = rhs.eval(e);
+		if (v1 instanceof VInt && v2 instanceof VInt) {
+			final int i1 = ((VInt) v1).getVal();
+			final int i2 = ((VInt) v2).getVal();
+			return new VInt(i1 / i2);
+		} else {
+			throw new InterpreterError("illegal types to / operator");
+		}
+    }
 }

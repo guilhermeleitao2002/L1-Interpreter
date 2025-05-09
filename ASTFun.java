@@ -2,14 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ASTFun implements ASTNode {
-    private List<String> params;
-    private ASTNode body;
+    private final List<String> params;
+    private final ASTNode body;
     
     public ASTFun(List<String> params, ASTNode body) {
         this.params = params;
         this.body = body;
     }
     
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         // If there are multiple parameters, transform into nested single-parameter functions
         if (params.size() > 1) {
@@ -22,7 +23,7 @@ public class ASTFun implements ASTNode {
             for (int i = params.size() - 2; i >= 0; i--) {
                 List<String> currentParam = new ArrayList<>();
                 currentParam.add(params.get(i));
-                ASTNode innerFun = new ASTFun(lastParam, currentBody);
+                final ASTNode innerFun = new ASTFun(lastParam, currentBody);
                 currentBody = innerFun;
                 lastParam = currentParam;
             }

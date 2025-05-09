@@ -1,5 +1,6 @@
 public class L0int {
     public static void main(String args[]) {
+		@SuppressWarnings("unused")
 		Parser parser = new Parser(System.in);
 		ASTNode exp;
 		
@@ -7,34 +8,20 @@ public class L0int {
 
 		while (true) {
 			try {
-				exp = parser.Start();
+				exp = Parser.Start();
 				if (exp==null) System.exit(0);
-				IValue v = exp.eval(new Environment<IValue>());
+				IValue v = exp.eval(new Environment());
 				System.out.println(v.toStr());
 			} catch (ParseException e) {
 				System.out.println("Syntax Error:\n" + e);
-				parser.ReInit(System.in);
+				Parser.ReInit(System.in);
+			} catch (InterpreterError e) {
+				System.out.println("Runtime Error:\n" + e);
+				Parser.ReInit(System.in);
 			} catch (Exception e) {
-				e.printStackTrace();
-				parser.ReInit(System.in);
+				System.out.println("Error: " + e);
+				Parser.ReInit(System.in);
 			}
 		}
-    }
-
-	private static boolean endsWithPrint(ASTNode node) {
-        if (node instanceof ASTPrint) {
-            return true;
-        }
-        if (node instanceof ASTSeq) {
-            // For ASTSeq, check if the second expression ends with print
-            ASTSeq seq = (ASTSeq) node;
-            return endsWithPrint(seq.getSecond());
-        }
-        if (node instanceof ASTLet) {
-            // For ASTLet, check if the body ends with print
-            ASTLet let = (ASTLet) node;
-            return endsWithPrint(let.getBody());
-        }
-        return false;
     }
 }

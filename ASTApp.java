@@ -1,14 +1,15 @@
 import java.util.List;
 
 public class ASTApp implements ASTNode {
-    private ASTNode function;
-    private List<ASTNode> arguments;
+    private final ASTNode function;
+    private final List<ASTNode> arguments;
     
     public ASTApp(ASTNode function, List<ASTNode> arguments) {
         this.function = function;
         this.arguments = arguments;
     }
     
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         // Start with the function
         IValue currentValue = function.eval(e);
@@ -19,8 +20,8 @@ public class ASTApp implements ASTNode {
                 throw new InterpreterError("Function application requires a function");
             }
             
-            VClosure closure = (VClosure) currentValue;
-            List<String> params = closure.getParams();
+            final VClosure closure = (VClosure) currentValue;
+            final List<String> params = closure.getParams();
             
             // Each function should take exactly one parameter in this language
             if (params.size() != 1) {
@@ -28,10 +29,10 @@ public class ASTApp implements ASTNode {
             }
             
             // Evaluate the argument
-            IValue argValue = arg.eval(e);
+            final IValue argValue = arg.eval(e);
             
             // Create a new environment for function execution
-            Environment<IValue> funEnv = closure.getEnv().beginScope();
+            final Environment<IValue> funEnv = closure.getEnv().beginScope();
             
             // Bind the parameter to the argument
             funEnv.assoc(params.get(0), argValue);

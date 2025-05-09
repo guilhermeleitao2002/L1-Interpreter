@@ -17,30 +17,30 @@ public class VList implements IValue {
         this.isNil = false;
     }
     
-    public boolean isNil() {
-        return isNil;
+    public final boolean isNil() {
+        return this.isNil;
     }
     
-    public IValue getHead() {
-        if (isNil) throw new RuntimeException("Cannot get head of nil list");
-        return head;
+    public final IValue getHead() {
+        if (this.isNil) throw new RuntimeException("Cannot get head of nil list");
+        return this.head;
     }
     
-    public IValue getTail() {
-        if (isNil) throw new RuntimeException("Cannot get tail of nil list");
-        return tail;
+    public final IValue getTail() {
+        if (this.isNil) throw new RuntimeException("Cannot get tail of nil list");
+        return this.tail;
     }
     
     @Override
-    public String toStr() {
-        if (isNil) return "nil";
+    public final String toStr() {
+        if (this.isNil) return "nil";
         
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("[");
         
         IValue current = this;
         while (current instanceof VList && !((VList)current).isNil()) {
-            VList currentList = (VList)current;
+            final VList currentList = (VList)current;
             sb.append(currentList.getHead().toStr());
             current = currentList.getTail();
             

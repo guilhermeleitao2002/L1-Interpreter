@@ -1,8 +1,15 @@
 public class ASTOr implements ASTNode {
-    ASTNode lhs, rhs;
+    private final ASTNode lhs;
+    private final ASTNode rhs;
 
+    public ASTOr(ASTNode l, ASTNode r) {
+        this.lhs = l;
+        this.rhs = r;
+    }
+
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        IValue v1 = lhs.eval(e);
+        final IValue v1 = lhs.eval(e);
         
         if (!(v1 instanceof VBool)) {
             throw new InterpreterError("Type error: || requires boolean operands");
@@ -13,16 +20,11 @@ public class ASTOr implements ASTNode {
             return new VBool(true);
         }
         
-        IValue v2 = rhs.eval(e);
+        final IValue v2 = rhs.eval(e);
         if (!(v2 instanceof VBool)) {
             throw new InterpreterError("Type error: || requires boolean operands");
         }
         
         return new VBool(((VBool)v2).getValue());
-    }
-
-    public ASTOr(ASTNode l, ASTNode r) {
-        lhs = l;
-        rhs = r;
     }
 }

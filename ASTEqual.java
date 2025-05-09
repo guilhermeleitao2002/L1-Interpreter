@@ -1,21 +1,23 @@
 public class ASTEqual implements ASTNode {
-    ASTNode lhs, rhs;
+    private final ASTNode lhs;
+    private final ASTNode rhs;
+    
+    public ASTEqual(ASTNode l, ASTNode r) {
+        this.lhs = l;
+        this.rhs = r;
+    }
 
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        IValue v1 = lhs.eval(e);
-        IValue v2 = rhs.eval(e);
+        final IValue v1 = lhs.eval(e);
+        final IValue v2 = rhs.eval(e);
         
         if (v1 instanceof VInt && v2 instanceof VInt) {
-            return new VBool(((VInt)v1).getval() == ((VInt)v2).getval());
+            return new VBool(((VInt)v1).getVal() == ((VInt)v2).getVal());
         }
         if (v1 instanceof VBool && v2 instanceof VBool) {
             return new VBool(((VBool)v1).getValue() == ((VBool)v2).getValue());
         }
         throw new InterpreterError("Type error: == requires matching numeric or boolean operands");
-    }
-
-    public ASTEqual(ASTNode l, ASTNode r) {
-        lhs = l;
-        rhs = r;
     }
 }

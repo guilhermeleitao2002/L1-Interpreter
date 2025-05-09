@@ -1,18 +1,15 @@
 public class ASTSeq implements ASTNode {
-    private ASTNode first;
-    private ASTNode second;
+    private final ASTNode first;
+    private final ASTNode second;
     
     public ASTSeq(ASTNode first, ASTNode second) {
         this.first = first;
         this.second = second;
     }
     
+    @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         first.eval(e);
         return second.eval(e);
-    }
-
-    public ASTNode getSecond() {
-        return second;
     }
 }
