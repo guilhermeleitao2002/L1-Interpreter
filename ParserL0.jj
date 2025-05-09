@@ -232,8 +232,8 @@ ASTNode Fact() :
   List<ASTNode> args = new ArrayList<ASTNode>();
 }
 {
-   (
-      n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
+  (
+    n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> { t = new ASTFalse(); }
     | n=<Id> { t = new ASTId(n.image); } 
@@ -260,6 +260,21 @@ ASTNode Fact() :
       }
     | LOOKAHEAD(3) <LPAR> t=Let() <RPAR>
     | <LPAR> t=BA() <RPAR>
-    )
-   { return t; }
+  )
+  (LOOKAHEAD(2) 
+    <LPAR> 
+    {
+      args = new ArrayList<ASTNode>();
+    }
+    e1=BA() 
+    {
+      args.add(e1);
+    }
+    ( <COMMA> e2=BA() { args.add(e2); } )*
+    <RPAR>
+    {
+      t = new ASTApp(t, args);
+    }
+  )*
+  { return t; }
 }
