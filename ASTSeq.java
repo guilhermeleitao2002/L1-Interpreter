@@ -11,4 +11,8 @@ public class ASTSeq implements ASTNode {
         first.eval(e);
         return second.eval(e);
     }
+
+    public ASTNode getSecond() {
+        return second;
+    }
 }

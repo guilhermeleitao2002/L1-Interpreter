@@ -26,4 +26,8 @@ public class ASTLet implements ASTNode {
         this.decls = decls;
         body = b;
     }
+
+    public ASTNode getBody() {
+        return body;
+    }
 }
