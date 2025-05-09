@@ -12,7 +12,7 @@ public class L0int {
 				IValue v = exp.eval(new Environment<IValue>());
 				System.out.println(v.toStr());
 			} catch (ParseException e) {
-				System.out.println("Syntax Error.");
+				System.out.println("Syntax Error:\n" + e);
 				parser.ReInit(System.in);
 			} catch (Exception e) {
 				e.printStackTrace();
