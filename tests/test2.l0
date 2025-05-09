@@ -1,18 +1,1 @@
-let a = true;
-let b = false;
-let andResult = a && b;
-let orResult = a || b;
-let notResult = ~a;
-let x = 10;
-let y = 5;
-let result = if (x > y) {
-  println x;
-  x
-} else {
-  println y;
-  y
-};
-println andResult;
-println orResult;
-println notResult;
-println result;;
+(let x = 1; (x + 1)) * (let x = 2; (x + 3));;

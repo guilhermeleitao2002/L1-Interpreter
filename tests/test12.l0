@@ -1,0 +1,8 @@
+let comp = fn f, g => 
+        { fn x =>
+        { f (g (x)) }};
+let inc = fn x => { x + 1};
+let dup = fn x => { 2 * x};
+let c2 = comp (inc) (dup);
+c2 (99)
+;;

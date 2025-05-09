@@ -1,11 +1,5 @@
-let i = box 1;
-let sum = box 0;
-
-while (!i <= 5) {
-  sum := !sum + !i;
-  println !i;
-  i := !i + 1
-};
-
-println "Sum:";
-println !sum;;
+let y = 1;
+let b = (y > 0) && (y <= 20);
+let z = (let z = 2*y;  z*z);
+b || ~ (z < 0)
+;;
