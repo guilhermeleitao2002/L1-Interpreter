@@ -1,0 +1,19 @@
+let add = fn x, y => {
+  x + y
+};
+
+let mul = fn x, y => {
+  x * y
+};
+
+let result1 = ((add) (5, 3));
+let result2 = ((mul) (4, 6));
+println result1;
+println result2;
+
+let compose = fn f, g, x => {
+  ((f) (((g) (x, 2)), 3))
+};
+
+let result3 = ((compose) (add, mul, 5));
+println result3;;

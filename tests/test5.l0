@@ -1,0 +1,11 @@
+let i = box 1;
+let sum = box 0;
+
+while (!i <= 5) {
+  sum := !sum + !i;
+  println !i;
+  i := !i + 1
+};
+
+println "Sum:";
+println !sum;;

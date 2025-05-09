@@ -1,0 +1,34 @@
+let factorial = fn n => {
+  let result = box 1;
+  let i = box n;
+  
+  while (!i > 0) {
+    result := !result * !i;
+    i := !i - 1
+  };
+  
+  !result
+};
+
+let n = 5;
+println "Factorial of";
+println n;
+println "is:";
+println ((factorial) (n));
+
+let sum = fn n => {
+  let result = box 0;
+  let i = box 1;
+  
+  while (!i <= n) {
+    result := !result + !i;
+    i := !i + 1
+  };
+  
+  !result
+};
+
+println "Sum from 1 to";
+println n;
+println "is:";
+println ((sum) (n));;

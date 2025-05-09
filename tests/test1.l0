@@ -1,0 +1,10 @@
+let x = 10;
+let y = 5;
+let add = x + y;
+let sub = x - y;
+let mul = x * y;
+let div = x / y;
+println add;
+println sub;
+println mul;
+println div;;
