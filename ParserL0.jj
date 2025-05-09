@@ -223,6 +223,7 @@ ASTNode Fact() :
   ASTNode t, e1, e2;
   List<Bind> decls;
   ASTNode  body, alt;
+  List<ASTNode> args;
 }
 {
    (
@@ -230,12 +231,12 @@ ASTNode Fact() :
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> { t = new ASTFalse(); }
     | n=<Id> { t = new ASTId(n.image); } 
-    | <BOX> t=Fact() { /* missing AST for box */; t = null; }
-    | <STAR> t=Fact() { /* missing AST for deref */; t = null; }
+    | <BOX> t=Fact() { t = new ASTBox(t); }
+    | <STAR> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
     | <NOT> t=Fact() { t = new ASTNot(t); }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
-    | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { /* TBC */ t = null; }
+    | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
     | <FN> n=<Id> 
       { 
         List<String> params = new ArrayList<String>(); 
@@ -243,14 +244,16 @@ ASTNode Fact() :
       }
       ( <COMMA> n = <Id> { params.add(n.image); } )*
       <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
-    | <PRINT> t=Fact() { /* missing AST for print */; t = null;  }
-    | <PRINTLN> t=Fact() {/* missing AST for println */; t = null;  }
+    | <PRINT> t=Fact() { t = new ASTPrint(t, false); }
+    | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
+    | <LPAR> t=BA() <RPAR> { /* Parenthesized expression */ }
     | <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
       {
         List<ASTNode> args = new ArrayList<ASTNode>();
         args.add(e1);
         t = new ASTApp(t, args);
       }
+    | <LPAR> t=Let() <RPAR> { /* Just a parenthesized expression */ }
     )
    { return t; }
 }
