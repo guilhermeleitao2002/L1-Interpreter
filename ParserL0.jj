@@ -101,7 +101,8 @@ ASTNode Start():
 }
 
 ASTNode Let() :
-{ Token n; 
+{
+  Token n; 
   ASTNode t, e1, e2;
   List<Bind> decls  = new ArrayList<Bind>();;
 }
@@ -223,11 +224,12 @@ ASTNode Term() :
 
 
 ASTNode Fact() :
-{ Token n; 
+{ 
+  Token n; 
   ASTNode t, e1, e2;
   List<Bind> decls;
-  ASTNode  body, alt;
-  List<ASTNode> args;
+  ASTNode body, alt;
+  List<ASTNode> args = new ArrayList<ASTNode>();
 }
 {
    (
@@ -250,14 +252,17 @@ ASTNode Fact() :
       <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
     | <PRINT> t=Fact() { t = new ASTPrint(t, false); }
     | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
-    | <LPAR> t=BA() <RPAR> { /* Parenthesized expression */ }
-    | <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
-      {
-        List<ASTNode> args = new ArrayList<ASTNode>();
-        args.add(e1);
-        t = new ASTApp(t, args);
-      }
-    | <LPAR> t=Let() <RPAR> { /* Just a parenthesized expression */ }
+    | <LPAR> 
+      (
+        <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
+        {
+          args.clear();
+          args.add(e1);
+          t = new ASTApp(t, args);
+        }
+        |
+        t=Let() <RPAR>
+      )
     )
    { return t; }
 }
