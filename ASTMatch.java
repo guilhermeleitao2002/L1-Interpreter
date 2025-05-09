@@ -26,16 +26,6 @@ public class ASTMatch implements ASTNode {
                 newEnv.assoc(tailVar, list.getTail());
                 return consCase.eval(newEnv);
             }
-        } else if (value instanceof VLazyList) {
-            VLazyList lazyList = (VLazyList) value;
-            if (lazyList.isNil()) {
-                return nilCase.eval(e);
-            } else {
-                Environment<IValue> newEnv = e.beginScope();
-                newEnv.assoc(headVar, lazyList.getHead());
-                newEnv.assoc(tailVar, lazyList.getTail());
-                return consCase.eval(newEnv);
-            }
         } else {
             throw new InterpreterError("Match expression must evaluate to a list");
         }
