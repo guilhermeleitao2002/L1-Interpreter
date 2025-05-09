@@ -133,12 +133,14 @@ ASTNode Seq() :
 }
 
 ASTNode SeqExp() :
-{Token op;
-  ASTNode t1, t2;}
+{
+  Token op;
+  ASTNode t1, t2;
+}
 {
      t1 = BA() ( ( op=<ASSIGN> ) t2 = BA() 
  		 {
-		 /* missing AST build */
+		  t1 = new ASTAssign(t1, t2);
      } 
 		)*
      { return t1; }  
