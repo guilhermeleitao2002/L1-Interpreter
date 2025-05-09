@@ -1,9 +1,10 @@
 #!/bin/sh
 
-rm *.class
-javacc ParserL0.jj
-javac *.java
+rm *.class 2> /dev/null
+javacc ParserL0.jj && \
+javac *.java && \
 
-# Added this to run the tests
-./run_tests.sh
-rm *.class
+# Added to run the tests after compilation
+./run_tests.sh && \
+rm *.class 2> /dev/null
+
