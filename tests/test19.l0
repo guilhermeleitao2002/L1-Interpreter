@@ -4,7 +4,7 @@ let count = box ( 100 ) ;
 let lv = new( fibogen );
 
 while (*count ~= 0) {
-    match lv {
+    match *lv {
         nil -> print -1
         | v :: tail -> println (v); lv := tail
     }
