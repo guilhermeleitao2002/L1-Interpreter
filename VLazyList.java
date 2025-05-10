@@ -15,6 +15,7 @@ public class VLazyList implements IValue {
     
     public void evaluate() throws InterpreterError {
         if (!this.evaluated) {
+            // Evaluate head and tail expressions in the captured environment
             this.head = headExpr.eval(env);
             this.tail = tailExpr.eval(env);
             this.evaluated = true;
@@ -23,6 +24,15 @@ public class VLazyList implements IValue {
     
     public boolean isEvaluated() {
         return this.evaluated;
+    }
+    
+    public boolean isNil() throws InterpreterError {
+        // A lazy list is never nil directly - we need to evaluate it first
+        evaluate();
+        if (this.tail instanceof VList vList) {
+            return vList.isNil() && this.head == null;
+        }
+        return false;
     }
     
     public IValue getHead() throws InterpreterError {
@@ -39,7 +49,7 @@ public class VLazyList implements IValue {
     public String toStr() {
         try {
             evaluate();
-            return "<lazy list>";
+            return "<lazy " + this.head.toStr() + " :: " + this.tail.toStr() + ">";
         } catch (InterpreterError e) {
             return "<unevaluated lazy list>";
         }

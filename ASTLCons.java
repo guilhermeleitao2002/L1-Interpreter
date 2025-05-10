@@ -11,6 +11,8 @@ public class ASTLCons implements ASTNode {
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         // For lazy cons, we don't evaluate the expressions yet
         // Instead, we store the unevaluated expressions and the environment
-        return new VLazyList(e, head, tail);
+        // We make a copy of the environment to capture the current bindings
+        Environment<IValue> capturedEnv = e.copy();
+        return new VLazyList(capturedEnv, head, tail);
     }
 }
