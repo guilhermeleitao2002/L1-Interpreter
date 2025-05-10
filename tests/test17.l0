@@ -1,0 +1,12 @@
+let emptyList = nil;
+let singletonList = 1 :: nil;
+let myList = 1 :: 2 :: 3 :: nil;
+
+let sum = fn list => {
+  match list {
+    nil -> 0
+    | head :: tail -> head + sum(tail)
+  }
+};
+
+sum(myList);;
