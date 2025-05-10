@@ -1,0 +1,12 @@
+let fibo = fn a, b => { lcons(a,fibo(b,a+b)) };
+let fibogen = fibo(0,1);
+let count = box ( 100 ) ;
+let lv = new( fibogen );
+
+while (*count ~= 0) {
+    match lv {
+        nil -> print -1
+        | v :: tail -> println (v); lv := tail
+    }
+    count := count - 1
+};;
