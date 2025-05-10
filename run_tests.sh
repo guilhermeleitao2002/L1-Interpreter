@@ -6,7 +6,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Loop through tests 1 to 12
-for test_num in {1..13}; do
+for test_num in {1..14}; do
     test_file="tests/test${test_num}.l0"
     expected_file="tests/test${test_num}.out"
 
