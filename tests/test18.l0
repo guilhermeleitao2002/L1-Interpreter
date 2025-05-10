@@ -1,0 +1,26 @@
+let naturals = fn from => {
+  lcons(from, naturals(from + 1))
+};
+
+let take = fn n, lazyList => {
+  if (n <= 0) {
+    nil
+  } else {
+    match lazyList {
+      nil -> nil
+      | head :: tail -> head :: take(n - 1, tail)
+    }
+  }
+};
+
+let natStream = naturals(1);
+let firstFive = take(5, natStream);
+
+let sum = fn list => {
+  match list {
+    nil -> 0
+    | head :: tail -> head + sum(tail)
+  }
+};
+
+sum(firstFive);;
