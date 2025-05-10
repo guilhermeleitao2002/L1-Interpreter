@@ -84,7 +84,19 @@ TOKEN :
   |
   < FN : "fn" >
   |
-  <ARROW : "=>">
+  < ARROW : "=>" >
+  |
+  < MATCH_ARROW : "->" >
+  |
+  < NIL : "nil" >
+  |
+  < DCOLON : "::" >
+  |
+  < MATCH : "match" >
+  |
+  < VBAR : "|" >
+  |
+  < LCONS : "lcons" >
   |
   < String: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"" >
   |
@@ -188,6 +200,8 @@ ASTNode Rel() :
                t1 = new ASTLowerThan(t1, t2);
              } else if (op.kind == LTEQ) {
                t1 = new ASTLowerEqual(t1, t2);
+             } else if (op.kind == DIF) {
+               t1 = new ASTNotEqual(t1, t2);
              }
 		   } 
 		)?
@@ -212,30 +226,43 @@ ASTNode Term() :
 {Token op;
   ASTNode t1, t2;}
 {
-     t1 = Fact() (
-     	  	 op=<STAR> t2 = Fact()   { t1 = new ASTMult(t1,t2); }
+     t1 = Cons() (
+     	  	 op=<STAR> t2 = Cons()   { t1 = new ASTMult(t1,t2); }
 		 |
-		 op=<DIV> t2 = Fact()  { t1 = new ASTDiv(t1,t2); }
+		 op=<DIV> t2 = Cons()  { t1 = new ASTDiv(t1,t2); }
 		 |
-		 op = <LPAR> t2 = Exp () <RPAR>  { /* TBC */ } 
+		 op = <LPAR> t2 = Exp() <RPAR>  { /* TBC */ } 
 		)*
      { return t1; } 
 }
 
+ASTNode Cons() :
+{
+  ASTNode t1, t2;
+  Token op;
+}
+{
+     t1 = Fact() ( op=<DCOLON> t2 = Cons()
+                 { t1 = new ASTCons(t1, t2); }
+               )?
+     { return t1; }
+}
 
 ASTNode Fact() :
 { 
   Token n; 
-  ASTNode t, e1, e2;
+  ASTNode t, e1, e2, e3;
   List<Bind> decls;
   ASTNode body, alt;
   List<ASTNode> args = new ArrayList<ASTNode>();
+  String headVar, tailVar;
 }
 {
   (
     n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> { t = new ASTFalse(); }
+    | n=<NIL> { t = new ASTNil(); }
     | n=<Id> { t = new ASTId(n.image); } 
     | <BOX> t=Fact() { t = new ASTBox(t); }
     | <STAR> t=Fact() { t = new ASTDeref(t); }
@@ -243,6 +270,9 @@ ASTNode Fact() :
     | <NOT> t=Fact() { t = new ASTNot(t); }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
+    | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=BA() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=BA() <RBRA> 
+      { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
+    | <LCONS> <LPAR> e1=BA() <COMMA> e2=BA() <RPAR> { t = new ASTLCons(e1, e2); }
     | <FN> n=<Id> 
       { 
         List<String> params = new ArrayList<String>(); 
