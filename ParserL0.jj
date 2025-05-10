@@ -270,7 +270,7 @@ ASTNode Fact() :
     | <NOT> t=Fact() { t = new ASTNot(t); }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
-    | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=BA() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=BA() <RBRA> 
+    | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() <RBRA> 
       { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
     | <LCONS> <LPAR> e1=BA() <COMMA> e2=BA() <RPAR> { t = new ASTLCons(e1, e2); }
     | <FN> n=<Id> 
