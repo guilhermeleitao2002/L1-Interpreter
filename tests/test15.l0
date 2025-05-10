@@ -1,0 +1,7 @@
+let x = 5;
+let result = if (x > 3) {
+  x * 2
+} else {
+  x + 2
+};
+result;;
