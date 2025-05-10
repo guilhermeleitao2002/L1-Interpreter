@@ -4,12 +4,12 @@ public class Environment <E>{
     final Environment<E> anc;
     final Map<String, E> bindings;
 
-    Environment(){
+    public Environment(){
         this.anc = null;
         this.bindings = new HashMap<>();
     }
     
-    Environment(Environment<E> ancestor){
+    public Environment(Environment<E> ancestor){
         this.anc = ancestor;
         this.bindings = new HashMap<>();
     }
@@ -39,5 +39,11 @@ public class Environment <E>{
         }
         
         throw new InterpreterError("Variable " + id + " not found");
+    }
+
+    public Environment <E> copy() {
+        Environment<E> newEnv = new Environment<>(this.anc);
+        newEnv.bindings.putAll(this.bindings);
+        return newEnv;
     }
 }
