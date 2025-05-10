@@ -1,2 +1,5 @@
 *.class
 .vscode
+Parse*
+SimpleCharStream.java
+Token*
