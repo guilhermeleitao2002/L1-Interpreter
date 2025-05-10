@@ -1,5 +1,8 @@
 *.class
 .vscode
-Parse*
+ParseException.java
+Parser.java
+ParserConstants.java
+ParserTokenManager.java
 SimpleCharStream.java
 Token*
