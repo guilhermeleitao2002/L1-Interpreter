@@ -14,6 +14,9 @@ public class ASTDiv implements ASTNode {
 		if (v1 instanceof VInt && v2 instanceof VInt) {
 			final int i1 = ((VInt) v1).getVal();
 			final int i2 = ((VInt) v2).getVal();
+
+			if (i2 == 0)
+				throw new InterpreterError("/ by zero");
 			return new VInt(i1 / i2);
 		} else {
 			throw new InterpreterError("illegal types to / operator");
