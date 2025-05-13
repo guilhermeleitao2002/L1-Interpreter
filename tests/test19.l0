@@ -1,6 +1,6 @@
-let fibo = fn a, b => { lcons(a,fibo(b,a+b)) };
-let fibogen = box(fibo(0,1));
-let count = box ( 10 ) ;
+let fibo = fn a, b => { lcons(a, fibo (b) (a+b)) };
+let fibogen = box(fibo (0) (1));
+let count = box (10) ;
 
 while (*count ~= 0) {
     match *fibogen {

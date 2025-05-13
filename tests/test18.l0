@@ -8,13 +8,13 @@ let take = fn n, lazyList => {
   } else {
     match lazyList {
       nil -> nil
-      | head :: tail -> head :: take(n - 1, tail)
+      | head :: tail -> head :: take(n - 1) (tail)
     }
   }
 };
 
 let natStream = naturals(1);
-let firstFive = take(5, natStream);
+let firstFive = take(5) (natStream);
 
 let sum = fn list => {
   match list {
