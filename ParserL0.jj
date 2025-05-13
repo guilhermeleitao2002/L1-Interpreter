@@ -300,7 +300,6 @@ ASTNode Fact() :
     {
       args.add(e1);
     }
-    ( <COMMA> e2=BA() { args.add(e2); } )*
     <RPAR>
     {
       t = new ASTApp(t, args);
