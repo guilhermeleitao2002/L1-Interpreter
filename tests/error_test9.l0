@@ -1,0 +1,5 @@
+let x = 5;
+match x {
+  nil -> 0
+  | head :: tail -> head + 1
+};;
