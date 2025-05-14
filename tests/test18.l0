@@ -8,7 +8,7 @@ let take = fn n, lazyList => {
   } else {
     match lazyList {
       nil -> nil
-      | head :: tail -> head :: take(n - 1) (tail)
+      | head :: tail -> head :: take (n - 1) (tail)
     }
   }
 };
