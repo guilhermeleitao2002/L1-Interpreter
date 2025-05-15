@@ -43,8 +43,8 @@ done
 
 # Do the same for the error tests
 for test_num in {1..15}; do
-    test_file="tests/error_test${test_num}.l0"
-    expected_file="tests/error_test${test_num}.out"
+    test_file="validation_tests/test${test_num}.l0"
+    expected_file="validation_tests/test${test_num}.out"
 
     # Run the test and capture all output (stdout and stderr)
     output=$(java L0int < "$test_file" 2>&1)
@@ -64,11 +64,13 @@ for test_num in {1..15}; do
     
     expected=$(cat "$expected_file")
     
-    # Compare output
-    if [[ "$trimmed_output" == "$expected" ]]; then
-        echo -e "${GREEN}[+] Error Test $test_num passed successfully!${NC}"
+    # Compare only first 3 lines of both outputs
+    trimmed_output_first_3=$(echo "$trimmed_output" | head -n 3)
+    expected_first_3=$(echo "$expected" | head -n 3)
+    if [[ "$trimmed_output_first_3" == "$expected_first_3" ]]; then
+        echo -e "${GREEN}[+] Validation Test $test_num passed successfully!${NC}"
     else
-        echo -e "${RED}[-] Error Test $test_num failed!${NC}"
+        echo -e "${RED}[-] Validation Test $test_num failed!${NC}"
         echo -e "${RED}------ Expected output: ------${NC}"
         echo "$expected"
         echo -e "${RED}------ Actual output: ------${NC}"

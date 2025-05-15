@@ -1,0 +1,4 @@
+Syntax Error:
+ParseException: Encountered " "+" "+ "" at line 1, column 12.
+Was expecting one of:
+    ...

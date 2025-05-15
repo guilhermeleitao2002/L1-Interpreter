@@ -1,0 +1,4 @@
+Syntax Error:
+ParseException: Encountered " ";;" ";; "" at line 2, column 2.
+Was expecting one of:
+    ...
