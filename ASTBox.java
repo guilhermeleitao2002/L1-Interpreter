@@ -8,6 +8,6 @@ public class ASTBox implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue value = expr.eval(e);
-        return new VRef(value);
+        return new VCell(value);
     }
 }

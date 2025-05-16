@@ -1,7 +1,7 @@
-public class VRef implements IValue {
+public class VCell implements IValue {
     private IValue value;
     
-    public VRef(IValue initialValue) {
+    public VCell(IValue initialValue) {
         this.value = initialValue;
     }
     
@@ -15,6 +15,6 @@ public class VRef implements IValue {
     
     @Override
     public final String toStr() {
-        return "<ref: " + this.value.toStr() + ">";
+        return "ref@" + this;
     }
 }

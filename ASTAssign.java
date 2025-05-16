@@ -10,12 +10,12 @@ public class ASTAssign implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue lhsValue = lhs.eval(e);
-        if (!(lhsValue instanceof VRef)) {
+        if (!(lhsValue instanceof VCell)) {
             throw new InterpreterError("Left side of assignment must be a reference");
         }
         
         final IValue rhsValue = rhs.eval(e);
-        ((VRef) lhsValue).setValue(rhsValue);
+        ((VCell) lhsValue).setValue(rhsValue);
         return rhsValue;
     }
 }
