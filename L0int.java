@@ -10,7 +10,7 @@ public class L0int {
 			try {
 				exp = Parser.Start();
 				if (exp==null) System.exit(0);
-				IValue v = exp.eval(new Environment());
+				IValue v = exp.eval(new Environment<IValue>());
 				System.out.println(v.toStr());
 			} catch (ParseException e) {
 				System.out.println("Syntax Error:\n" + e);
