@@ -29,10 +29,10 @@ public class ASTFun implements ASTNode {
             }
             
             // Return the outermost function
-            return new VClosure(e, lastParam, currentBody);
+            return new VClosure(e, lastParam.get(0), currentBody);
         }
         
         // Single parameter case (base case for the curried functions)
-        return new VClosure(e, params, body);
+        return new VClosure(e, params.get(0), body);
     }
 }

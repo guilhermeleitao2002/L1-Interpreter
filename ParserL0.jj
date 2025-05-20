@@ -254,7 +254,7 @@ ASTNode Fact() :
   ASTNode t, e1, e2, e3;
   List<Bind> decls;
   ASTNode body, alt;
-  List<ASTNode> args = new ArrayList<ASTNode>();
+  ASTNode arg;
   String headVar, tailVar;
 }
 {
@@ -275,7 +275,7 @@ ASTNode Fact() :
     | <LCONS> <LPAR> e1=BA() <COMMA> e2=BA() <RPAR> { t = new ASTLCons(e1, e2); }
     | <FN> n=<Id> 
       { 
-        List<String> params = new ArrayList<String>(); 
+        List params = new ArrayList<String>(); 
         params.add(n.image);
       }
       ( <COMMA> n = <Id> { params.add(n.image); } )*
@@ -284,9 +284,8 @@ ASTNode Fact() :
     | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
     | LOOKAHEAD(3) <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
       {
-        args.clear();
-        args.add(e1);
-        t = new ASTApp(t, args);
+        arg= e1;
+        t = new ASTApp(t, arg);
       }
     | LOOKAHEAD(3) <LPAR> t=Let() <RPAR>
     | <LPAR> t=BA() <RPAR>
@@ -294,15 +293,14 @@ ASTNode Fact() :
   (LOOKAHEAD(2) 
     <LPAR> 
     {
-      args = new ArrayList<ASTNode>();
     }
     e1=BA() 
     {
-      args.add(e1);
+      arg= e1;
     }
     <RPAR>
     {
-      t = new ASTApp(t, args);
+      t = new ASTApp(t, arg);
     }
   )*
   { return t; }

@@ -1,13 +1,12 @@
-import java.util.List;
 
 public class VClosure implements IValue {
     private final Environment<IValue> env;
-    private final List<String> params;
+    private final String param;
     private final ASTNode body;
     
-    public VClosure(Environment<IValue> env, List<String> params, ASTNode body) {
+    public VClosure(Environment<IValue> env, String param, ASTNode body) {
         this.env = env;
-        this.params = params;
+        this.param = param;
         this.body = body;
     }
     
@@ -15,8 +14,8 @@ public class VClosure implements IValue {
         return this.env;
     }
     
-    public List<String> getParams() {
-        return this.params;
+    public String getParam() {
+        return this.param;
     }
     
     public ASTNode getBody() {
