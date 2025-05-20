@@ -42,7 +42,7 @@ for test_num in {1..19}; do
 done
 
 # Do the same for the error tests
-for test_num in {1..15}; do
+for test_num in {1..16}; do
     test_file="validation_tests/test${test_num}.l0"
     expected_file="validation_tests/test${test_num}.out"
 
