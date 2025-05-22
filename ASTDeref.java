@@ -7,10 +7,10 @@ public class ASTDeref implements ASTNode {
     
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        final IValue value = expr.eval(e);
-        if (!(value instanceof VCell)) {
+        final IValue value = this.expr.eval(e);
+        if (!(value instanceof VCell))
             throw new InterpreterError("Cannot dereference non-reference value");
-        }
+
         return ((VCell) value).getValue();
     }
 }
