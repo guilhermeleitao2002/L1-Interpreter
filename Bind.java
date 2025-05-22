@@ -7,11 +7,11 @@ public class Bind {
         this.exp = _exp;
     }
 
-    public String getId() {
-        return id;
+    public final String getId() {
+        return this.id;
     }
 
-    public ASTNode getExp() {
-        return exp;
+    public final ASTNode getExp() {
+        return this.exp;
     }
 }
