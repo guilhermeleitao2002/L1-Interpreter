@@ -9,12 +9,11 @@ public class ASTCons implements ASTNode {
     
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        final IValue headValue = head.eval(e);
-        final IValue tailValue = tail.eval(e);
+        final IValue headValue = this.head.eval(e);
+        final IValue tailValue = this.tail.eval(e);
         
-        if (!(tailValue instanceof VList)) {
-            throw new InterpreterError("Cons tail must be a list");
-        }
+        if (!(tailValue instanceof VList))
+            throw new InterpreterError("List Cons tail must be a list");
         
         return new VList(headValue, tailValue);
     }
