@@ -1,5 +1,5 @@
 let naturals = fn from => {
-  lcons(from, naturals(from + 1))
+  from ?: naturals(from + 1)
 };
 
 let take = fn n, lazyList => {

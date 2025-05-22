@@ -92,11 +92,11 @@ TOKEN :
   |
   < DCOLON : "::" >
   |
+  < LCONS : "?:" >
+  |
   < MATCH : "match" >
   |
   < VBAR : "|" >
-  |
-  < LCONS : "lcons" >
   |
   < String: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"" >
   |
@@ -242,9 +242,11 @@ ASTNode Cons() :
   Token op;
 }
 {
-     t1 = Fact() ( op=<DCOLON> t2 = Cons()
-                 { t1 = new ASTCons(t1, t2); }
-               )?
+     t1 = Fact() ( 
+         op=<DCOLON> t2 = Cons() { t1 = new ASTCons(t1, t2); }
+         |
+         op=<LCONS> t2 = Cons() { t1 = new ASTLCons(t1, t2); }
+     )?
      { return t1; }
 }
 
@@ -272,7 +274,6 @@ ASTNode Fact() :
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
     | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() <RBRA> 
       { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
-    | <LCONS> <LPAR> e1=BA() <COMMA> e2=BA() <RPAR> { t = new ASTLCons(e1, e2); }
     | <FN> n=<Id> 
       { 
         List params = new ArrayList<String>(); 
