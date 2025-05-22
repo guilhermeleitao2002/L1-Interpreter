@@ -12,7 +12,7 @@ public class ASTLCons implements ASTNode {
         // For lazy cons, we don't evaluate the expressions yet
         // Instead, we store the unevaluated expressions and the environment
         // We make a copy of the environment to capture the current bindings
-        Environment<IValue> capturedEnv = e.copy();
-        return new VLazyList(capturedEnv, head, tail);
+        final Environment<IValue> capturedEnv = e.copy();
+        return new VLazyList(capturedEnv, this.head, this.tail);
     }
 }
