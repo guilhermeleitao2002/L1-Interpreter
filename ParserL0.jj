@@ -275,7 +275,7 @@ ASTNode Fact() :
       { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
     | <FN> n=<Id>
       { 
-        List params = new ArrayList<String>();
+        List<String> params = new ArrayList<String>();
         params.add(n.image);
       }
       ( <COMMA> n = <Id> { params.add(n.image); } )*
