@@ -48,7 +48,7 @@ java L0int < program.l0
 
 ## Implementation
 
-Built using big-step environment-based semantics with:
+Built using big-step environment-Store semantics with:
 - AST nodes for each language construct
 - Environment-based variable binding
 - Dynamic type checking with comprehensive error messages
