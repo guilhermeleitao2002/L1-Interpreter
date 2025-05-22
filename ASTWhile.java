@@ -10,16 +10,14 @@ public class ASTWhile implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         while (true) {
-            final IValue condValue = condition.eval(e);
-            if (!(condValue instanceof VBool)) {
+            final IValue condValue = this.condition.eval(e);
+            if (!(condValue instanceof VBool))
                 throw new InterpreterError("While condition must be a boolean");
-            }
             
-            if (!((VBool) condValue).getValue()) {
-                return new VBool(false); // Return false as a dummy value
-            }
+            if (!((VBool) condValue).getValue())
+                return new VBool(false);
             
-            body.eval(e);
+            this.body.eval(e);
         }
     }
 }
