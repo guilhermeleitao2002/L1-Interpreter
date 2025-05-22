@@ -2,11 +2,11 @@ let fibo = fn a, b => { a ?: (fibo (b) (a+b)) };
 let fibogen = box(fibo (0) (1));
 let count = box (10) ;
 
-while (*count ~= 0) {
-    match *fibogen {
+while (!count ~= 0) {
+    match !fibogen {
         nil -> print -1
         | v :: tail -> println (v); fibogen := tail
     };
-    count := *count - 1
+    count := !count - 1
 };
-*count;;
+!count;;

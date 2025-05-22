@@ -1,7 +1,7 @@
 let counter = box(0);
 let sum = box(0);
-(while (*counter < 5) {
-  sum := *sum + *counter;
-  counter := *counter + 1
+(while (!counter < 5) {
+  sum := !sum + !counter;
+  counter := !counter + 1
 };
-*sum);;
+!sum);;

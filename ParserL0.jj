@@ -94,6 +94,8 @@ TOKEN :
   |
   < LCONS : "?:" >
   |
+  < DREF : "!" >
+  |
   < MATCH : "match" >
   |
   < VBAR : "|" >
@@ -266,7 +268,7 @@ ASTNode Fact() :
     | n=<NIL> { t = new ASTNil(); }
     | n=<Id> { t = new ASTId(n.image); } 
     | <BOX> t=Fact() { t = new ASTBox(t); }
-    | <STAR> t=Fact() { t = new ASTDeref(t); }
+    | <DREF> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
     | <NOT> t=Fact() { t = new ASTNot(t); }
     | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
