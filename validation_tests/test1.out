@@ -1,2 +1,2 @@
 Runtime Error:
-InterpreterError: Type error: + requires integer operands
+InterpreterError: Illegal types to + operator

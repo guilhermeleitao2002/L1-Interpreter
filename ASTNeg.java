@@ -7,12 +7,12 @@ public class ASTNeg implements ASTNode {
 
 	@Override
     public IValue eval(Environment <IValue>e) throws InterpreterError { 
-		final IValue v0 = exp.eval(e);
-		if (v0 instanceof VInt vInt) { 
+		final IValue v = this.exp.eval(e);
+
+		if (v instanceof VInt vInt) 
 			return new VInt(-vInt.getVal()); 
-		} else { 
-			throw new InterpreterError("illegal types to neg operator"); 
-		}
+		else
+			throw new InterpreterError("Illegal types to - operator");
     }
 }
 
