@@ -1,7 +1,7 @@
-public class ASTPrint implements ASTNode {
+public class ASTPrintln implements ASTNode {
     private final ASTNode expr;
     
-    public ASTPrint(ASTNode expr) {
+    public ASTPrintln(ASTNode expr) {
         this.expr = expr;
     }
     
@@ -9,8 +9,8 @@ public class ASTPrint implements ASTNode {
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue value = this.expr.eval(e);
 
-        System.out.print(value.toStr());
-        
+        System.out.println(value.toStr());
+
         return value;
     }
 }

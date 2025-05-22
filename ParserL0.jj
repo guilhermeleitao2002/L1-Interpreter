@@ -280,8 +280,8 @@ ASTNode Fact() :
       }
       ( <COMMA> n = <Id> { params.add(n.image); } )*
       <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
-    | <PRINT> t=Fact() { t = new ASTPrint(t, false); }
-    | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
+    | <PRINT> t=Fact() { t = new ASTPrint(t); }
+    | <PRINTLN> t=Fact() { t = new ASTPrintln(t); }
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>
   )
   (LOOKAHEAD(1)
