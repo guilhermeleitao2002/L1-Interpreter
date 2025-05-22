@@ -1,5 +1,5 @@
 public class ASTAnd implements ASTNode {
-    final ASTNode lhs, rhs;
+    private final ASTNode lhs, rhs;
 
     public ASTAnd(ASTNode l, ASTNode r) {
         this.lhs = l;
@@ -8,8 +8,7 @@ public class ASTAnd implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        final IValue v1 = lhs.eval(e);
-        
+        final IValue v1 = lhs.eval(e);        
         if (!(v1 instanceof VBool))
             throw new InterpreterError("Type error: && requires boolean operands");
         
