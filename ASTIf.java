@@ -11,16 +11,14 @@ public class ASTIf implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        final IValue condValue = condition.eval(e);
+        final IValue condValue = this.condition.eval(e);
         
-        if (!(condValue instanceof VBool)) {
-            throw new InterpreterError("Type error: if condition must be boolean");
-        }
+        if (!(condValue instanceof VBool))
+            throw new InterpreterError("if condition must be boolean");
         
-        if (((VBool)condValue).getValue()) {
-            return thenBranch.eval(e);
-        } else {
-            return elseBranch.eval(e);
-        }
+        if (((VBool)condValue).getValue())
+            return this.thenBranch.eval(e);
+        else
+            return this.elseBranch.eval(e);
     }
 }
