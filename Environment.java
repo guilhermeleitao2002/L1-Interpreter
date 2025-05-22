@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class Environment <E>{
-    final Environment<E> anc;
-    final Map<String, E> bindings;
+    private final Environment<E> anc;
+    private final Map<String, E> bindings;
 
     public Environment(){
         this.anc = null;
@@ -14,36 +14,36 @@ public class Environment <E>{
         this.bindings = new HashMap<>();
     }
 
-    public Environment<E> beginScope(){
+    public final Environment<E> beginScope(){
         return new Environment<>(this);
     }
     
-    public Environment<E> endScope(){
+    public final Environment<E> endScope(){
         return this.anc;
     }
 
-    public void assoc(String id, E bind) throws InterpreterError {
-        if (bindings.containsKey(id)) {
+    public final void assoc(String id, E bind) throws InterpreterError {
+        if (this.bindings.containsKey(id))
             throw new InterpreterError("Variable " + id + " already defined in this scope");
-        }
-        bindings.put(id, bind);
+
+        this.bindings.put(id, bind);
     }
 
-    public E find(String id) throws InterpreterError {
-        final E value = bindings.get(id);
-        if (value != null) {
+    public final E find(String id) throws InterpreterError {
+        final E value = this.bindings.get(id);
+        if (value != null)
             return value;
-        }
-        if (this.anc != null) {
+        if (this.anc != null)
             return this.anc.find(id);
-        }
         
         throw new InterpreterError("Variable " + id + " not found");
     }
 
-    public Environment <E> copy() {
-        Environment<E> newEnv = new Environment<>(this.anc);
+    public final Environment <E> copy() {
+        final Environment<E> newEnv = new Environment<>(this.anc);
+
         newEnv.bindings.putAll(this.bindings);
+        
         return newEnv;
     }
 }
