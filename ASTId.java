@@ -7,7 +7,7 @@ public class ASTId implements ASTNode	{
 
     @Override
     public IValue eval(Environment<IValue> env)	throws InterpreterError {
-        return env.find(id);
+        return env.find(this.id);
     }
 
 }	
