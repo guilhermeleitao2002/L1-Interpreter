@@ -13,43 +13,47 @@ public class VLazyList implements IValue {
         this.evaluated = false;
     }
     
-    public void evaluate() throws InterpreterError {
+    public final void evaluate() throws InterpreterError {
         if (!this.evaluated) {
-            // Evaluate head and tail expressions in the captured environment
-            this.head = headExpr.eval(env);
-            this.tail = tailExpr.eval(env);
+            // Evaluate head and tail expressions
+            this.head = this.headExpr.eval(this.env);
+            this.tail = this.tailExpr.eval(this.env);
             this.evaluated = true;
         }
     }
     
-    public boolean isEvaluated() {
+    public final boolean isEvaluated() {
         return this.evaluated;
     }
     
-    public boolean isNil() throws InterpreterError {
+    public final boolean isNil() throws InterpreterError {
         // A lazy list is never nil directly - we need to evaluate it first
         evaluate();
-        if (this.tail instanceof VList vList) {
+
+        if (this.tail instanceof VList vList)
             return vList.isNil() && this.head == null;
-        }
+            
         return false;
     }
     
-    public IValue getHead() throws InterpreterError {
+    public final IValue getHead() throws InterpreterError {
         evaluate();
+
         return this.head;
     }
     
-    public IValue getTail() throws InterpreterError {
+    public final IValue getTail() throws InterpreterError {
         evaluate();
+
         return this.tail;
     }
     
     @Override
-    public String toStr() {
+    public final String toStr() {
         try {
             evaluate();
-            return "<lazy " + this.head.toStr() + " :: " + this.tail.toStr() + ">";
+
+            return "<lazy " + this.head.toStr() + " ?: " + this.tail.toStr() + ">";
         } catch (InterpreterError e) {
             return "<unevaluated lazy list>";
         }

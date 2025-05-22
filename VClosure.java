@@ -10,15 +10,15 @@ public class VClosure implements IValue {
         this.body = body;
     }
     
-    public Environment<IValue> getEnv() {
+    public final Environment<IValue> getEnv() {
         return this.env;
     }
     
-    public String getParam() {
+    public final String getParam() {
         return this.param;
     }
     
-    public ASTNode getBody() {
+    public final ASTNode getBody() {
         return this.body;
     }
     

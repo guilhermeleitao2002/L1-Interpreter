@@ -10,7 +10,7 @@ public class VList implements IValue {
         this.isNil = true;
     }
     
-    // Constructor for cons
+    // Constructor for not nil
     public VList(IValue head, IValue tail) {
         this.head = head;
         this.tail = tail;
@@ -22,18 +22,23 @@ public class VList implements IValue {
     }
     
     public final IValue getHead() {
-        if (this.isNil) throw new RuntimeException("Cannot get head of nil list");
+        if (this.isNil)
+            throw new RuntimeException("Cannot get head of nil list");
+
         return this.head;
     }
     
     public final IValue getTail() {
-        if (this.isNil) throw new RuntimeException("Cannot get tail of nil list");
+        if (this.isNil)
+            throw new RuntimeException("Cannot get tail of nil list");
+
         return this.tail;
     }
     
     @Override
     public final String toStr() {
-        if (this.isNil) return "nil";
+        if (this.isNil)
+            return "nil";
         
         final StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -41,15 +46,17 @@ public class VList implements IValue {
         IValue current = this;
         while (current instanceof VList && !((VList)current).isNil()) {
             final VList currentList = (VList)current;
+
             sb.append(currentList.getHead().toStr());
+            
             current = currentList.getTail();
             
-            if (current instanceof VList && !((VList)current).isNil()) {
+            if (current instanceof VList && !((VList)current).isNil())
                 sb.append(", ");
-            }
         }
         
         sb.append("]");
+        
         return sb.toString();
     }
 }
