@@ -9,12 +9,12 @@ public class ASTGreaterEqual implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        final IValue v1 = lhs.eval(e);
-        final IValue v2 = rhs.eval(e);
+        final IValue v1 = this.lhs.eval(e);
+        final IValue v2 = this.rhs.eval(e);
         
-        if (v1 instanceof VInt && v2 instanceof VInt) {
-            return new VBool(((VInt)v1).getVal() >= ((VInt)v2).getVal());
-        }
-        throw new InterpreterError("Type error: >= requires numeric operands");
+        if (!(v1 instanceof VInt && v2 instanceof VInt))
+            throw new InterpreterError(">= requires numeric operands");
+
+        return new VBool(((VInt)v1).getVal() >= ((VInt)v2).getVal());
     }
 }
