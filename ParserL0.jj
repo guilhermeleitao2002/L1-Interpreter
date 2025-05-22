@@ -286,6 +286,6 @@ ASTNode Fact() :
   )
   (LOOKAHEAD(1)
     <LPAR> e1=BA() { arg= e1; } <RPAR> { t = new ASTApp(t, arg); }
-  )*
+  )* // Currying
   { return t; }
 }

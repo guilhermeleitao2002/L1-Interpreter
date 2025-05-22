@@ -5,5 +5,6 @@ javacc ParserL0.jj && \
 javac *.java && \
 
 # Added to run the tests after compilation
-./run_tests.sh 
+./run_tests.sh && \
+rm *.class 2> /dev/null
 
