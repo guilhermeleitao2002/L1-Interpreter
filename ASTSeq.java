@@ -9,7 +9,8 @@ public class ASTSeq implements ASTNode {
     
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        first.eval(e);
-        return second.eval(e);
+        this.first.eval(e);
+
+        return this.second.eval(e);
     }
 }
