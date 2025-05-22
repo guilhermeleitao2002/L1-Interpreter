@@ -253,15 +253,14 @@ ASTNode Cons() :
 ASTNode Fact() :
 { 
   Token n; 
-  ASTNode t, e1, e2, e3;
-  List<Bind> decls;
-  ASTNode body, alt;
+  ASTNode t, e1, e2;
+  ASTNode body;
   ASTNode arg;
   String headVar, tailVar;
 }
 {
   (
-    n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); } 
+    n=<Num> { t = new ASTInt(Integer.parseInt(n.image)); }
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> { t = new ASTFalse(); }
     | n=<NIL> { t = new ASTNil(); }
@@ -274,35 +273,25 @@ ASTNode Fact() :
     | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
     | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() <RBRA> 
       { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
-    | <FN> n=<Id> 
+    | <FN> n=<Id>
       { 
-        List params = new ArrayList<String>(); 
+        List params = new ArrayList<String>();
         params.add(n.image);
       }
       ( <COMMA> n = <Id> { params.add(n.image); } )*
       <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
     | <PRINT> t=Fact() { t = new ASTPrint(t, false); }
     | <PRINTLN> t=Fact() { t = new ASTPrint(t, true); }
-    | LOOKAHEAD(3) <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
+    | LOOKAHEAD(2) <LPAR> <LPAR> t=Let() <RPAR> <LPAR> e1=BA() <RPAR> <RPAR>
       {
         arg= e1;
         t = new ASTApp(t, arg);
       }
-    | LOOKAHEAD(3) <LPAR> t=Let() <RPAR>
+    | LOOKAHEAD(2) <LPAR> t=Let() <RPAR>
     | <LPAR> t=BA() <RPAR>
   )
-  (LOOKAHEAD(2) 
-    <LPAR> 
-    {
-    }
-    e1=BA() 
-    {
-      arg= e1;
-    }
-    <RPAR>
-    {
-      t = new ASTApp(t, arg);
-    }
+  (LOOKAHEAD(1)
+    <LPAR> e1=BA() { arg= e1; } <RPAR> { t = new ASTApp(t, arg); }
   )*
   { return t; }
 }
