@@ -1,23 +1,37 @@
 public class ASTPlus implements ASTNode {
-        private final ASTNode lhs;
-        private final ASTNode rhs;
+    private final ASTNode lhs;
+    private final ASTNode rhs;
 
-        public ASTPlus(ASTNode l, ASTNode r) {
-                this.lhs = l;
-                this.rhs = r;
+    public ASTPlus(ASTNode l, ASTNode r) {
+        this.lhs = l;
+        this.rhs = r;
+    }
+
+    @Override
+    public IValue eval(Environment<IValue> e) throws InterpreterError {
+        final IValue v1 = this.lhs.eval(e);
+        final IValue v2 = this.rhs.eval(e);
+        
+        if (v1 instanceof VInt && v2 instanceof VInt) {
+            final int i1 = ((VInt) v1).getVal();
+            final int i2 = ((VInt) v2).getVal();
+            return new VInt(i1 + i2);
+        } else
+            throw new InterpreterError("Illegal types to + operator");
+    }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
+        ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
+        
+        if (!(leftType instanceof ASTTInt)) {
+            throw new TypeError("Left operand of + must be int, got " + leftType.toStr());
         }
-
-        @Override
-        public IValue eval(Environment<IValue> e) throws InterpreterError {
-                final IValue v1 = this.lhs.eval(e);
-                final IValue v2 = this.rhs.eval(e);
-                
-                if (v1 instanceof VInt && v2 instanceof VInt) {
-                        final int i1 = ((VInt) v1).getVal();
-                        final int i2 = ((VInt) v2).getVal();
-
-                        return new VInt(i1 + i2);
-                } else
-                        throw new InterpreterError("Illegal types to + operator");
+        if (!(rightType instanceof ASTTInt)) {
+            throw new TypeError("Right operand of + must be int, got " + rightType.toStr());
         }
+        
+        return new ASTTInt();
+    }
 }
