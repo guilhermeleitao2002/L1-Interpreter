@@ -102,10 +102,6 @@ TOKEN :
   |
   < String: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"" >
   |
-  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
-  |
-  < Num: (["0"-"9"]) + >
-  |
   < TYPE : "type" >
   |
   < STRUCT : "struct" >
@@ -129,6 +125,12 @@ TOKEN :
   < END : "end" >
   |
   < DO : "do" >
+  |
+  < DOT : "." >
+  |
+  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+  |
+  < Num: (["0"-"9"]) + >
 }
 
 ASTNode Start():
@@ -261,8 +263,10 @@ ASTNode Exp() :
 }
 
 ASTNode Term() :
-{Token op;
-  ASTNode t1, t2;}
+{
+  Token op;
+  ASTNode t1, t2;
+}
 {
      t1 = Cons() (
      	  	 op=<STAR> t2 = Cons()   { t1 = new ASTMult(t1,t2); }
@@ -298,8 +302,8 @@ ASTNode Fact() :
   String headVar, tailVar;
   List<String> params = new ArrayList<String>();
   List<ASTType> paramTypes = new ArrayList<ASTType>();
-  Map<String, ASTNode> structFields = new HashMap<>();
-  Map<String, ASTNode> casesBranches = new HashMap<>();
+  Map<String, ASTNode> structFields = new HashMap<String, ASTNode>();
+  Map<String, ASTCaseBranch> casesBranches = new HashMap<String, ASTCaseBranch>();
   String stringLiteral;
 }
 {
@@ -308,9 +312,14 @@ ASTNode Fact() :
     | n=<TRUE> { t = new ASTTrue(); }
     | n=<FALSE> { t = new ASTFalse(); }
     | n=<NIL> { t = new ASTNil(); }
-    | n=<Id> { t = new ASTId(n.image); } 
+    | LOOKAHEAD(3) n=<Id>
+        (
+          <LPAR> e1=BA() { arg= e1; } <RPAR> { t = new ASTApp(new ASTId(n.image), arg); }
+          |
+          { t = new ASTId(n.image); }
+        )
     | n=<String> { t = new ASTString(n.image); }
-    | <LPAR> <RPAR> { t = new ASTUnit(); }
+    | LOOKAHEAD(2) <LPAR> <RPAR> { t = new ASTUnit(); }
     | <BOX> t=Fact() { t = new ASTBox(t); }
     | <DREF> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
@@ -350,11 +359,9 @@ ASTNode Fact() :
     | <PRINTLN> t=Fact() { t = new ASTPrintln(t); }
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>
   )
-  (LOOKAHEAD(1)
-    <LPAR> e1=BA() { arg= e1; } <RPAR> { t = new ASTApp(t, arg); }
-    |
-    <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); } // Field access
-  )* // Currying and field access
+  (
+    <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); }
+  )*
   { return t; }
 }
 
@@ -365,7 +372,7 @@ ASTType TypeExpr():
 {
   t1 = TypeFactor() 
   (
-    <ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
+    LOOKAHEAD(1) <ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
   )?
   { return t1; }
 }
@@ -403,7 +410,7 @@ ASTType TypeFactor():
 
 Map<String, ASTType> FieldTypeList():
 {
-  Map<String, ASTType> fields = new HashMap<>();
+  Map<String, ASTType> fields = new HashMap<String, ASTType>();
   Token fieldName;
   ASTType fieldType;
 }
