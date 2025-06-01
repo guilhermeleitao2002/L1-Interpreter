@@ -18,4 +18,19 @@ public class ASTAnd implements ASTNode {
         
         return new VBool(((VBool)v1).getValue() && ((VBool)v2).getValue());
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
+        ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
+        
+        if (!(leftType instanceof ASTTBool) && leftType != null) {
+            throw new TypeError("Left operand of && must be bool, got " + leftType.toStr());
+        }
+        if (!(rightType instanceof ASTTBool) && rightType != null) {
+            throw new TypeError("Right operand of && must be bool, got " + rightType.toStr());
+        }
+        
+        return new ASTTBool();
+    }
 }
