@@ -14,11 +14,8 @@ public class L0int {
 				if (exp==null) System.exit(0);
 				
 				// Add static type checking
+				@SuppressWarnings("unused")
 				ASTType type = TypeChecker.typecheck(exp);
-				
-				if (showTypes) {
-				    System.out.println("Type: " + type.toStr());
-				}
 				
 				@SuppressWarnings("Convert2Diamond")
 				IValue v = exp.eval(new Environment<IValue>());
