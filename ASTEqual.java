@@ -20,4 +20,20 @@ public class ASTEqual implements ASTNode {
             
         throw new InterpreterError("== requires matching numeric or boolean operands");
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
+        ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
+        
+        if (leftType instanceof ASTTInt && rightType instanceof ASTTInt) {
+            return new ASTTBool();
+        }
+        if (leftType instanceof ASTTBool && rightType instanceof ASTTBool) {
+            return new ASTTBool();
+        }
+
+       throw new TypeError("== requires matching int or bool operands, got " + 
+                          leftType.toStr() + " and " + rightType.toStr());
+    }
 }
