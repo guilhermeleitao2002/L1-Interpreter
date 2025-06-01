@@ -20,4 +20,16 @@ public class ASTLet implements ASTNode {
         
         return body.eval(newEnv);
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        final TypeEnvironment newGamma = gamma.beginScope();
+        
+        for (Bind decl : this.decls) {
+            final ASTType declType = decl.getExp().typecheck(newGamma, typeDefs);
+            newGamma.assoc(decl.getId(), declType);
+        }
+        
+        return this.body.typecheck(newGamma, typeDefs);
+    }
 }
