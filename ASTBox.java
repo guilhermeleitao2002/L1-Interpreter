@@ -8,7 +8,12 @@ public class ASTBox implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue value = this.expr.eval(e);
-
         return new VCell(value);
+    }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType exprType = this.expr.typecheck(gamma, typeDefs);
+        return new ASTTRef(exprType);
     }
 }
