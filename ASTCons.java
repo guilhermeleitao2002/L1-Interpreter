@@ -17,4 +17,23 @@ public class ASTCons implements ASTNode {
         
         return new VList(headValue, tailValue);
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType headType = this.head.typecheck(gamma, typeDefs);
+        ASTType tailType = this.tail.typecheck(gamma, typeDefs);
+        
+        if (!(tailType instanceof ASTTList) && tailType != null) {
+            throw new TypeError("List cons tail must be a list type, got " + tailType.toStr());
+        }
+        
+        ASTType listElementType = ((ASTTList) tailType).getElementType();
+        
+        if (!Subtyping.isSubtype(headType, listElementType, typeDefs)) {
+            throw new TypeError("List element type mismatch: expected " + listElementType.toStr() + 
+                              ", got " + headType.toStr());
+        }
+        
+        return new ASTTList(listElementType);
+    }
 }
