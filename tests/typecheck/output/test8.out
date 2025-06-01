@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Function application requires a function
+Type Error:
+TypeError: Function application requires a function type, got int

@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Match expression must evaluate to a list or lazy list
+Type Error:
+TypeError: List match requires a list type, got int

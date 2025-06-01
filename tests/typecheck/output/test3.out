@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Cannot dereference non-reference value
+Type Error:
+TypeError: Cannot dereference non-reference type int

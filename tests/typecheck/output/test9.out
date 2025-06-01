@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: == requires matching numeric or boolean operands
+Type Error:
+TypeError: == requires matching int or bool operands, got int and bool

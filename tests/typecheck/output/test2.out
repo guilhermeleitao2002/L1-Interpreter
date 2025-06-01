@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Type error: && requires boolean operands
+Type Error:
+TypeError: Left operand of && must be bool, got int

@@ -68,9 +68,9 @@ for test_num in {1..6}; do
     trimmed_output_first_3=$(echo "$trimmed_output" | head -n 3)
     expected_first_3=$(echo "$expected" | head -n 3)
     if [[ "$trimmed_output_first_3" == "$expected_first_3" ]]; then
-        echo -e "${GREEN}[+] Typecheck Test $test_num passed successfully!${NC}"
+        echo -e "${GREEN}[+] Syntactic Test $test_num passed successfully!${NC}"
     else
-        echo -e "${RED}[-] Typecheck Test $test_num failed!${NC}"
+        echo -e "${RED}[-] Syntactic Test $test_num failed!${NC}"
         echo -e "${RED}------ Expected output: ------${NC}"
         echo "$expected"
         echo -e "${RED}------ Actual output: ------${NC}"
@@ -106,9 +106,9 @@ for test_num in {1..9}; do
     trimmed_output_first_3=$(echo "$trimmed_output" | head -n 3)
     expected_first_3=$(echo "$expected" | head -n 3)
     if [[ "$trimmed_output_first_3" == "$expected_first_3" ]]; then
-        echo -e "${GREEN}[+] Syntactic Test $test_num passed successfully!${NC}"
+        echo -e "${GREEN}[+] Typecheck Test $test_num passed successfully!${NC}"
     else
-        echo -e "${RED}[-] Syntactic Test $test_num failed!${NC}"
+        echo -e "${RED}[-] Typecheck Test $test_num failed!${NC}"
         echo -e "${RED}------ Expected output: ------${NC}"
         echo "$expected"
         echo -e "${RED}------ Actual output: ------${NC}"

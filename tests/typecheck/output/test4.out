@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Left side of assignment must be a reference
+Type Error:
+TypeError: Left side of assignment must be a reference type, got int
