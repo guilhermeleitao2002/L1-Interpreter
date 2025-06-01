@@ -5,9 +5,12 @@ public class ASTTList implements ASTType {
         this.elt = eltt;
     }
     
+    public ASTType getElementType() {
+        return this.elt;
+    }
+    
     @Override
     public String toStr() {
         return "list<" + this.elt.toStr() + ">";
     }
-    
 }
