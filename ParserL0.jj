@@ -360,7 +360,7 @@ ASTNode Fact() :
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>
   )
   (
-    <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); }
+    LOOKAHEAD(2) <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); }
   )*
   { return t; }
 }
