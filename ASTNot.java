@@ -14,4 +14,15 @@ public class ASTNot implements ASTNode {
         
         return new VBool(!vBool.getValue());
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        ASTType expType = this.exp.typecheck(gamma, typeDefs);
+        
+        if (!(expType instanceof ASTTBool) && expType != null) {
+            throw new TypeError("Operand of ~ must be bool, got " + expType.toStr());
+        }
+        
+        return new ASTTBool();
+    }
 }
