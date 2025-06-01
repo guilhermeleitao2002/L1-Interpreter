@@ -10,10 +10,19 @@ public class L0int {
 			try {
 				exp = Parser.Start();
 				if (exp==null) System.exit(0);
+				
+				// Add static type checking
+				ASTType type = TypeChecker.typecheck(exp);
+				System.out.println("Type: " + type.toStr());
+				
+				@SuppressWarnings("Convert2Diamond")
 				IValue v = exp.eval(new Environment<IValue>());
 				System.out.println(v.toStr());
 			} catch (ParseException e) {
 				System.out.println("Syntax Error:\n" + e);
+				Parser.ReInit(System.in);
+			} catch (TypeError e) {
+				System.out.println("Type Error:\n" + e);
 				Parser.ReInit(System.in);
 			} catch (InterpreterError e) {
 				System.out.println("Runtime Error:\n" + e);
