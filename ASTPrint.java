@@ -13,4 +13,9 @@ public class ASTPrint implements ASTNode {
         
         return value;
     }
+    
+    @Override
+    public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
+        return this.expr.typecheck(gamma, typeDefs);
+    }
 }
