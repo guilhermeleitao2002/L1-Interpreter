@@ -6,4 +6,4 @@ javac *.java && \
 
 # Added to run the tests after compilation
 ./run_tests.sh && \
-rm *.class 2> /dev/null &&
+rm *.class 2> /dev/null
