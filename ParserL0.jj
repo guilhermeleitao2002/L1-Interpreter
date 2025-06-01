@@ -105,6 +105,30 @@ TOKEN :
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
   |
   < Num: (["0"-"9"]) + >
+  |
+  < TYPE : "type" >
+  |
+  < STRUCT : "struct" >
+  |
+  < UNION : "union" >
+  |
+  < UNIT : "unit" >
+  |
+  < STRING : "string" >
+  |
+  < INT : "int" >
+  |
+  < BOOL : "bool" >
+  |
+  < LIST : "list" >
+  |
+  < REF : "ref" >
+  |
+  < THEN : "then" >
+  |
+  < END : "end" >
+  |
+  < DO : "do" >
 }
 
 ASTNode Start():
@@ -118,18 +142,30 @@ ASTNode Let() :
 {
   Token n; 
   ASTNode t, e1, e2;
-  List<Bind> decls  = new ArrayList<Bind>();;
+  ASTType typeExpr;
+  List<Bind> decls = new ArrayList<Bind>();
+  Map<String, ASTType> typeDefs = new HashMap<String, ASTType>();
 }
-{ 
-    (
+{
+  (
     t = Seq()
     |
-    ((<LET>  n=<Id>  <EQUAL> e1 = BA() <SEMIC>
-      { decls.add(new Bind(n.image,e1)); }
-     )+
-        e2 = Seq() { t = new ASTLet(decls, e2); })
+    // Type definitions
+    (
+      (<TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
+        { typeDefs.put(n.image, typeExpr); }
+      )+
+      e2 = Seq() { t = new ASTTypeDef(typeDefs, e2); }
     )
-    
+    |
+    // Let bindings
+    (
+      (<LET> n=<Id> <EQUAL> e1 = BA() <SEMIC>
+        { decls.add(new Bind(n.image, e1)); }
+      )+
+      e2 = Seq() { t = new ASTLet(decls, e2); }
+    )
+  )
    { return t; }
 }
 
@@ -258,7 +294,13 @@ ASTNode Fact() :
   ASTNode t, e1, e2;
   ASTNode body;
   ASTNode arg;
+  ASTType paramType;
   String headVar, tailVar;
+  List<String> params = new ArrayList<String>();
+  List<ASTType> paramTypes = new ArrayList<ASTType>();
+  Map<String, ASTNode> structFields = new HashMap<>();
+  Map<String, ASTNode> casesBranches = new HashMap<>();
+  String stringLiteral;
 }
 {
   (
@@ -267,27 +309,112 @@ ASTNode Fact() :
     | n=<FALSE> { t = new ASTFalse(); }
     | n=<NIL> { t = new ASTNil(); }
     | n=<Id> { t = new ASTId(n.image); } 
+    | n=<String> { t = new ASTString(n.image); }
+    | <LPAR> <RPAR> { t = new ASTUnit(); }
     | <BOX> t=Fact() { t = new ASTBox(t); }
     | <DREF> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
     | <NOT> t=Fact() { t = new ASTNot(t); }
-    | <IF> t=BA() <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> { t = new ASTIf(t, e1, e2); }
-    | <WHILE> t=BA() <LBRA> body=Let() <RBRA> { t = new ASTWhile(t, body); }
-    | <MATCH> t=BA() <LBRA> <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() <RBRA> 
-      { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
-    | <FN> n=<Id>
-      { 
-        List<String> params = new ArrayList<String>();
-        params.add(n.image);
-      }
-      ( <COMMA> n = <Id> { params.add(n.image); } )*
-      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
+    | <IF> t=BA() <THEN> <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> <END> 
+      { t = new ASTIf(t, e1, e2); }
+    | <WHILE> t=BA() <DO> <LBRA> body=Let() <RBRA> <END> 
+      { t = new ASTWhile(t, body); }
+    | <MATCH> t=BA() <LBRA> 
+      (
+        <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() 
+        { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
+        |
+        // Union match cases
+        n=<Id> { String firstCase = n.image; } <LPAR> n=<Id> { String firstVar = n.image; } <RPAR> <MATCH_ARROW> e1=Let() 
+        { casesBranches.put(firstCase, new ASTCaseBranch(firstVar, e1)); }
+        (
+          <VBAR> n=<Id> { String caseName = n.image; } <LPAR> n=<Id> { String caseVar = n.image; } <RPAR> <MATCH_ARROW> e2=Let()
+          { casesBranches.put(caseName, new ASTCaseBranch(caseVar, e2)); }
+        )*
+        { t = new ASTCaseMatch(t, casesBranches); }
+      )
+      <RBRA>
+    | <FN> n=<Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); }
+      ( <COMMA> n = <Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); } )*
+      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, paramTypes, e2); }
+    | <LBRA> // Struct literal
+      (
+        n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
+        (
+          <COMMA> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
+        )*
+      )?
+      <RBRA> { t = new ASTStructLiteral(structFields); }
+    | n=<Id> <LPAR> e1=BA() <RPAR> { t = new ASTVariant(n.image, e1); } // Union constructor
     | <PRINT> t=Fact() { t = new ASTPrint(t); }
     | <PRINTLN> t=Fact() { t = new ASTPrintln(t); }
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>
   )
   (LOOKAHEAD(1)
     <LPAR> e1=BA() { arg= e1; } <RPAR> { t = new ASTApp(t, arg); }
-  )* // Currying
+    |
+    <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); } // Field access
+  )* // Currying and field access
   { return t; }
+}
+
+ASTType TypeExpr():
+{
+  ASTType t1, t2;
+}
+{
+  t1 = TypeFactor() 
+  (
+    <ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
+  )?
+  { return t1; }
+}
+
+ASTType TypeFactor():
+{
+  ASTType t;
+  Token id;
+  Map<String, ASTType> fields;
+}
+{
+  (
+    <UNIT> { t = new ASTTUnit(); }
+    |
+    <INT> { t = new ASTTInt(); }
+    |
+    <BOOL> { t = new ASTTBool(); }
+    |
+    <STRING> { t = new ASTTString(); }
+    |
+    <REF> <LT> t = TypeExpr() <GT> { t = new ASTTRef(t); }
+    |
+    <LIST> <LT> t = TypeExpr() <GT> { t = new ASTTList(t); }
+    |
+    <STRUCT> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
+    |
+    <UNION> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTUnion(fields); }
+    |
+    <LPAR> t = TypeExpr() <RPAR>
+    |
+    id = <Id> { t = new ASTTId(id.image); }
+  )
+  { return t; }
+}
+
+Map<String, ASTType> FieldTypeList():
+{
+  Map<String, ASTType> fields = new HashMap<>();
+  Token fieldName;
+  ASTType fieldType;
+}
+{
+  (
+    fieldName = <Id> <COLON> fieldType = TypeExpr() 
+    { fields.put(fieldName.image, fieldType); }
+    (
+      <COMMA> fieldName = <Id> <COLON> fieldType = TypeExpr()
+      { fields.put(fieldName.image, fieldType); }
+    )*
+  )?
+  { return fields; }
 }

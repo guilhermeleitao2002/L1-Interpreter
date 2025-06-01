@@ -4,6 +4,8 @@ public class L0int {
 		Parser parser = new Parser(System.in);
 		ASTNode exp;
 		
+		boolean showTypes = args.length > 0 && args[0].equals("--show-types");
+		
 		System.out.println("L0 interpreter PL MEIC 2024/25 (v0.0)\n");
 
 		while (true) {
@@ -13,7 +15,10 @@ public class L0int {
 				
 				// Add static type checking
 				ASTType type = TypeChecker.typecheck(exp);
-				System.out.println("Type: " + type.toStr());
+				
+				if (showTypes) {
+				    System.out.println("Type: " + type.toStr());
+				}
 				
 				@SuppressWarnings("Convert2Diamond")
 				IValue v = exp.eval(new Environment<IValue>());

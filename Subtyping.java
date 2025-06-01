@@ -1,6 +1,7 @@
 import java.util.*;
 
-public class Subtyping {    
+public class Subtyping {
+    
     public static boolean isSubtype(ASTType subType, ASTType superType, TypeDefEnvironment typeDefs) throws TypeError {
         // Reflexivity: A <: A
         if (typeEquals(subType, superType, typeDefs)) {
@@ -110,9 +111,57 @@ public class Subtyping {
                    typeEquals(arrow1.codom, arrow2.codom, typeDefs);
         }
         
-        // Add more type equality checks as needed
+        if (resolved1 instanceof ASTTRef ref1) {
+            ASTTRef ref2 = (ASTTRef) resolved2;
+            return typeEquals(ref1.getType(), ref2.getType(), typeDefs);
+        }
+        
+        if (resolved1 instanceof ASTTList list1) {
+            ASTTList list2 = (ASTTList) resolved2;
+            return typeEquals(list1.getElementType(), list2.getElementType(), typeDefs);
+        }
+        
+        if (resolved1 instanceof ASTTStruct struct1) {
+            ASTTStruct struct2 = (ASTTStruct) resolved2;
+            return structTypesEqual(struct1, struct2, typeDefs);
+        }
+        
+        if (resolved1 instanceof ASTTUnion union1) {
+            ASTTUnion union2 = (ASTTUnion) resolved2;
+            return unionTypesEqual(union1, union2, typeDefs);
+        }
         
         return false;
+    }
+    
+    private static boolean structTypesEqual(ASTTStruct struct1, ASTTStruct struct2, TypeDefEnvironment typeDefs) throws TypeError {
+        Map<String, ASTType> fields1 = struct1.getFields();
+        Map<String, ASTType> fields2 = struct2.getFields();
+        
+        if (fields1.size() != fields2.size()) return false;
+        
+        for (Map.Entry<String, ASTType> entry : fields1.entrySet()) {
+            String fieldName = entry.getKey();
+            if (!fields2.containsKey(fieldName)) return false;
+            if (!typeEquals(entry.getValue(), fields2.get(fieldName), typeDefs)) return false;
+        }
+        
+        return true;
+    }
+    
+    private static boolean unionTypesEqual(ASTTUnion union1, ASTTUnion union2, TypeDefEnvironment typeDefs) throws TypeError {
+        Map<String, ASTType> variants1 = union1.getVariants();
+        Map<String, ASTType> variants2 = union2.getVariants();
+        
+        if (variants1.size() != variants2.size()) return false;
+        
+        for (Map.Entry<String, ASTType> entry : variants1.entrySet()) {
+            String variantName = entry.getKey();
+            if (!variants2.containsKey(variantName)) return false;
+            if (!typeEquals(entry.getValue(), variants2.get(variantName), typeDefs)) return false;
+        }
+        
+        return true;
     }
     
     private static ASTType resolveType(ASTType type, TypeDefEnvironment typeDefs) throws TypeError {
