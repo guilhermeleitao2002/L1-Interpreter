@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: if condition must be boolean
+Type Error:
+TypeError: if condition must be bool, got int

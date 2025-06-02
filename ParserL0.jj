@@ -324,9 +324,9 @@ ASTNode Fact() :
     | <DREF> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }
     | <NOT> t=Fact() { t = new ASTNot(t); }
-    | <IF> t=BA() <THEN> <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA> <END> 
+    | <IF> <LPAR> t=BA() <RPAR> <LBRA> e1=Let() <RBRA> <ELSE> <LBRA> e2=Let() <RBRA>
       { t = new ASTIf(t, e1, e2); }
-    | <WHILE> t=BA() <DO> <LBRA> body=Let() <RBRA> <END> 
+    | <WHILE> <LPAR> t=BA() <RPAR> <LBRA> body=Let() <RBRA>
       { t = new ASTWhile(t, body); }
     | <MATCH> t=BA() <LBRA> 
       (
@@ -372,7 +372,7 @@ ASTType TypeExpr():
 {
   t1 = TypeFactor() 
   (
-    LOOKAHEAD(1) <ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
+    LOOKAHEAD(1) <MATCH_ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
   )?
   { return t1; }
 }

@@ -1,2 +1,2 @@
-Runtime Error:
-InterpreterError: Variable y not found
+Type Error:
+TypeError: Variable y not found
