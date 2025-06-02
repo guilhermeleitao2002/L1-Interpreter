@@ -1,3 +1,3 @@
-let f = fn g,z => { g (z) };
-f (fn z => { z*2 }) (7)
+let f = fn g: int -> int, z: int => { g (z) };
+f (fn z: int => { z*2 }) (7)
 ;;

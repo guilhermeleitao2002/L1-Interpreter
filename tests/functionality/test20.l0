@@ -1,4 +1,4 @@
-let f = fn n => {
+let f = fn n: int => {
     n + 1
 };
 f(f(f(0)));;

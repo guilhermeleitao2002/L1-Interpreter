@@ -1,2 +1,2 @@
-let add = fn x, y => { x + y };
+let add = fn x: int, y: int => { x + y };
 add(1, 2);;

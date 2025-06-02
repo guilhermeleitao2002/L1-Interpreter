@@ -1,3 +1,3 @@
 let x = 1;
-let f = fn y => { x + y };
+let f = fn y: int => { x + y };
 (x + f (2));;
