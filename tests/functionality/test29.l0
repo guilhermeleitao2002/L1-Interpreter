@@ -1,0 +1,22 @@
+let ones = fn u: unit => { 1 ?: ones(()) };
+let take = fn n: int, lst: list<int> => {
+  if (n <= 0) {
+    nil
+  } else {
+    match lst {
+      nil -> nil
+      | h :: t -> h :: take(n - 1, t)
+    }
+  }
+};
+let first3 = take(3, ones(()));
+match first3 {
+  nil -> 0
+  | h :: t -> match t {
+    nil -> 0
+    | h2 :: t2 -> match t2 {
+      nil -> 0
+      | h3 :: t3 -> h + h2 + h3
+    }
+  }
+};;
