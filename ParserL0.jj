@@ -364,7 +364,6 @@ ASTNode Fact() :
         )*
       )?
       <RBRA> { t = new ASTStructLiteral(structFields); }
-    | n=<Id> <LPAR> e1=BA() <RPAR> { t = new ASTVariant(n.image, e1); } // Union constructor
     | <PRINT> t=Fact() { t = new ASTPrint(t); }
     | <PRINTLN> t=Fact() { t = new ASTPrintln(t); }
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>

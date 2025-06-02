@@ -11,6 +11,12 @@ public class ASTApp implements ASTNode {
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue currentValue = this.function.eval(e);
 
+        // Handle union constructors
+        if (currentValue instanceof VConstructor constructor) {
+            IValue argValue = this.argument.eval(e);
+            return new VVariant(constructor.getConstructorName(), argValue);
+        }
+
         if (!(currentValue instanceof VClosure))
             throw new InterpreterError("Function application requires a function");
         

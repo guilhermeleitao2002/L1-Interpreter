@@ -1,8 +1,12 @@
 public	class ASTTId implements ASTType	{
-    String id;	
+    public String id;	
     
     public ASTTId(String id)	{
         this.id = id;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     @Override
@@ -10,4 +14,4 @@ public	class ASTTId implements ASTType	{
         return this.id;
     }
 
-}	
+}

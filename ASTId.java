@@ -5,6 +5,10 @@ public class ASTId implements ASTNode	{
         this.id = id;
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     @Override
     public IValue eval(Environment<IValue> env)	throws InterpreterError {
         return env.find(this.id);
