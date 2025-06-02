@@ -1,0 +1,6 @@
+type Result = union { Ok: int, Err: string };
+let success: Result = Ok(42);
+match success {
+  Ok(x) -> x * 2
+  | Err(msg) -> 0
+};;

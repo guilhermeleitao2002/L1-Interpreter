@@ -1,0 +1,3 @@
+let u = ();
+let f = fn x: unit => { 42 };
+f(u);;

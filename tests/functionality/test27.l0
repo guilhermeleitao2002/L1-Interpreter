@@ -1,0 +1,6 @@
+let nested = box(1 :: 2 :: 3 :: nil);
+let lst = !nested;
+match lst {
+  nil -> 0
+  | h :: t -> h
+};;
