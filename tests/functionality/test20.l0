@@ -1,0 +1,4 @@
+let b = true;
+let n = 123;
+let result = "Bool: " + b + ", Number: " + n;
+result;;
