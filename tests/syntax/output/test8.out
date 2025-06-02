@@ -1,0 +1,4 @@
+Syntax Error:
+ParseException: Encountered " "}" "} "" at line 3, column 1.
+Was expecting one of:
+    ...

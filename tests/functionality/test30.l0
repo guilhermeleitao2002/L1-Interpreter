@@ -1,0 +1,5 @@
+type Counter = struct { count: ref<int> };
+let c = { count = box(0) };
+c.count := !c.count + 1;
+c.count := !c.count + 1;
+!c.count;;
