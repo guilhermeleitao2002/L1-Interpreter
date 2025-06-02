@@ -16,8 +16,8 @@ let take = fn n: int, lazyList: list<int> => {
 let natStream = naturals(1);
 let firstFive = take(5) (natStream);
 
-let sum = fn list: list<int> => {
-  match list {
+let sum = fn lst: list<int> => {
+  match lst {
     nil -> 0
     | head :: tail -> head + sum(tail)
   }

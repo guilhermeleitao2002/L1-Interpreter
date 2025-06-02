@@ -273,7 +273,7 @@ ASTNode Term() :
 		 |
 		 op=<DIV> t2 = Cons()  { t1 = new ASTDiv(t1,t2); }
 		 |
-		 op = <LPAR> t2 = Exp() <RPAR>  { /* TBC */ } 
+		 op = <LPAR> t2 = Exp() <RPAR>  { t1 = new ASTApp(t1, t2); }
 		)*
      { return t1; } 
 }
