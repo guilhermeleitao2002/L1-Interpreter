@@ -150,25 +150,35 @@ ASTNode Let() :
 }
 {
   (
-    t = Seq()
-    |
-    // Type definitions
+    // First handle any type definitions
     (
-      (<TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
-        { typeDefs.put(n.image, typeExpr); }
-      )+
-      e2 = Seq() { t = new ASTTypeDef(typeDefs, e2); }
-    )
-    |
-    // Let bindings
+      <TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
+      { typeDefs.put(n.image, typeExpr); }
+    )*
+    
+    // Then handle let bindings or just a sequence
     (
       (<LET> n=<Id> <EQUAL> e1 = BA() <SEMIC>
         { decls.add(new Bind(n.image, e1)); }
       )+
-      e2 = Seq() { t = new ASTLet(decls, e2); }
+      e2 = Seq() 
+      { 
+        t = new ASTLet(decls, e2);
+        if (!typeDefs.isEmpty()) {
+          t = new ASTTypeDef(typeDefs, t);
+        }
+      }
+      |
+      e2 = Seq() 
+      { 
+        t = e2;
+        if (!typeDefs.isEmpty()) {
+          t = new ASTTypeDef(typeDefs, t);
+        }
+      }
     )
   )
-   { return t; }
+  { return t; }
 }
 
 ASTNode Seq() :

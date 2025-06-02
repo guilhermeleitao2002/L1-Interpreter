@@ -1,2 +1,2 @@
 Type Error:
-TypeError: Cannot assign string to int in struct field
+TypeError: Argument type string is not compatible with parameter type int

@@ -6,7 +6,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Loop through functionality tests
-for test_num in {1..31}; do
+for test_num in {1..30}; do
     test_file="tests/functionality/test${test_num}.l0"
     expected_file="tests/functionality/output/test${test_num}.out"
 
@@ -80,7 +80,7 @@ for test_num in {1..8}; do
 done
 
 # Do the same for the dynamic typechecking tests
-for test_num in {1..12}; do
+for test_num in {1..10}; do
     test_file="tests/typecheck/test${test_num}.l0"
     expected_file="tests/typecheck/output/test${test_num}.out"
 

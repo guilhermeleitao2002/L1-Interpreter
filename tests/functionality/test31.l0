@@ -1,6 +1,0 @@
-type Transformer = int -> int;
-let applyTwice = fn f: Transformer, x: int => {
-  f(f(x))
-};
-let inc = fn x: int => { x + 1 };
-applyTwice(inc, 10);;

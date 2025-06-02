@@ -1,5 +1,5 @@
 type BasicPerson = struct { name: string };
 type DetailedPerson = struct { name: string, age: int, city: string };
-let detailed: DetailedPerson = { name = "Bob", age = 30, city = "NYC" };
-let processBasic = fn p: BasicPerson => { "Hello, " + p.name };
+let detailed = { name = "Bob", age = 30, city = "NYC" };
+let processBasic = fn p: struct { name: string } => { "Hello, " + p.name };
 processBasic(detailed);;

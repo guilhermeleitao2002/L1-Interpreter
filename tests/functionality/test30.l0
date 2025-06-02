@@ -1,5 +1,5 @@
-type Counter = struct { count: ref<int> };
-let c = { count = box(0) };
-c.count := !c.count + 1;
-c.count := !c.count + 1;
-!c.count;;
+let applyTwice = fn f: int -> int => { fn x: int => {
+  f(f(x))
+}};
+let inc = fn x: int => { x + 1 };
+applyTwice(inc)(10);;

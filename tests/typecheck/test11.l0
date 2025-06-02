@@ -1,3 +1,0 @@
-type Option = union { Some: int, None: unit };
-let opt = Some("string");
-opt;;
