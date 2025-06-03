@@ -12,6 +12,7 @@ e ::= fn x : tau => e[x]
 
 tau ::= unit
  | tau -> tau 
+ | unit
  | tau * tau
 
 Gamma ::= *
@@ -121,188 +122,279 @@ theorem preservation: forall dt: * |- e : tau forall ds: e -> e' exists * |- e' 
 dt' : * |- e' : tau by induction on ds:
 
 case rule
+
 	d1 : e1 -> e1'
 	----------------------- c-app-l
 	d2 : e1 e2 -> e1' e2
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d3 : * |- e1 : tau' -> tau
 		d4 : * |- e2 : tau'
 		---------------------------------- t-app
 		d5 : * |- (e1 e2) : tau
+
 	is
+
 		d6 : * |- e1' : tau' -> tau by induction hypothesis on d3, d1
 		dt' : * |- e1' e2 : tau by rule t-app on d6, d4
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e1 value
 	d2 : e2 -> e2'
 	----------------------- c-app-r
 	d3 : e1 e2 -> e1 e2'
+
 is
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d4 : * |- e1 : tau'' -> tau
 		d5 : * |- e2 : tau''
 		---------------------------------- t-app
 		d6 : * |- e1 e2 : tau
+
 	is
+
 		d7 : * |- e2' : tau'' by induction hypothesis on d5, d2
 		dt' : * |- e1 e2' : tau by rule t-app on d4, d7
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e2 value
 	------------------------------------------- r-app
 	d2 : (fn x : tau' => e1[x]) e2 -> e1[e2]
+
 is
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d4 : * |- fn x : tau' => e1[x] : tau'' -> tau
 		d5 : * |- e2 : tau''
 		---------------------------------------------------------- t-app
 		d6 : * |- (fn x : tau' => e1[x]) e2 : tau
+
 	is
+
 		dt' : * |- e' : tau by case analysis on d4 :
+
 		case rule
+
 			d7: *, x:tau' |- e1[x] : tau
 			------------------------------------------------- t-fn
 			d8: * |- fn x : tau' => e1[x] : tau' -> tau
+
 		is
 			d9: * |- e1[e2] : tau by substitution on d7, d5
+
 		end case
 		end case analysis
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e1 -> e1'
 	----------------------- c-pair-l
 	d2 : <e1,e2> -> <e1',e2>
+
 is
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d3 : * |- e1 : tau1
 		d4 : * |- e2 : tau2
 		---------------------------------- t-pair
 		d5 : * |- <e1,e2> : tau1 * tau2
+
 	is
 		d6 : * |- e1' : tau1 by induction hypothesis on d3, d1
 		dt' : * |- <e1',e2> : tau1 * tau2 by rule t-pair on d6, d4
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e1 value
 	d2 : e2 -> e2'
 	----------------------- c-pair-r
 	d3 : <e1,e2> -> <e1,e2'>
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d4 : * |- e1 : tau1
 		d5 : * |- e2 : tau2
 		---------------------------------- t-pair
 		d6 : * |- <e1,e2> : tau1 * tau2
+
 	is
+
 		d7 : * |- e2' : tau2 by induction hypothesis on d5, d2
 		dt' : * |- <e1,e2'> : tau1 * tau2 by rule t-pair on d4, d7
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e0 -> e1
 	----------------------- c-fst
 	d2 : fst e0 -> fst e1
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d3 : * |- e0 : tau1 * tau2
 		---------------------------------- t-fst
 		d4 : * |- fst e0 : tau1
+
 	is
+
 		d5 : * |- e1 : tau1 * tau2 by induction hypothesis on d3, d1
 		dt' : * |- fst e1 : tau1 by rule t-fst on d5
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e0 -> e1
 	----------------------- c-snd
 	d2 : snd e0 -> snd e1
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d3 : * |- e0 : tau1 * tau2
 		---------------------------------- t-snd
 		d4 : * |- snd e0 : tau2
+
 	is
+
 		d5 : * |- e1 : tau1 * tau2 by induction hypothesis on d3, d1
 		dt' : * |- snd e1 : tau2 by rule t-snd on d5
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e1 value
 	d2 : e2 value
 	----------------------- r-fst
 	d3 : fst <e1,e2> -> e1
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d4 : * |- <e1,e2> : tau1 * tau2
 		---------------------------------- t-fst
 		d5 : * |- fst <e1,e2> : tau1
+
 	is
+
 		dt' : * |- e1 : tau1 by case analysis on d4 :
+
 		case rule
+
 			d6 : * |- e1 : tau1
 			d7 : * |- e2 : tau2
 			---------------------------------- t-pair
 			d8 : * |- <e1,e2> : tau1 * tau2
+
 		is
+
 			dt' : * |- e1 : tau1 by d6
+
 		end case
 		end case analysis
+
 	end case
 	end case analysis
+
 end case
 
 case rule
+
 	d1 : e1 value
 	d2 : e2 value
 	----------------------- r-snd
 	d3 : snd <e1,e2> -> e2
+
 is
+
 	dt' : * |- e' : tau by case analysis on dt :
+
 	case rule
+
 		d4 : * |- <e1,e2> : tau1 * tau2
 		---------------------------------- t-snd
 		d5 : * |- snd <e1,e2> : tau2
+
 	is
+
 		dt' : * |- e2 : tau2 by case analysis on d4 :
+
 		case rule
+
 			d6 : * |- e1 : tau1
 			d7 : * |- e2 : tau2
 			---------------------------------- t-pair
 			d8 : * |- <e1,e2> : tau1 * tau2
+
 		is
+
 			dt' : * |- e2 : tau2 by d7
+
 		end case
 		end case analysis
+
 	end case
 	end case analysis
+	
 end case
 
 end induction
