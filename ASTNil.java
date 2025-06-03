@@ -16,12 +16,10 @@ public class ASTNil implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        if (explicitType != null) {
-            return explicitType;
-        }
+        if (this.explicitType != null)
+            return this.explicitType;
         
-        // For now, create a polymorphic int list type as default
-        // In a full implementation, this would use proper type inference
+        // Lets assume a polymorphic int list type as default
         return new ASTTList(new ASTTInt());
     }
 }

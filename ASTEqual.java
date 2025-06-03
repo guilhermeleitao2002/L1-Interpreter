@@ -23,15 +23,13 @@ public class ASTEqual implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
-        ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
+        final ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
+        final ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
         
-        if (leftType instanceof ASTTInt && rightType instanceof ASTTInt) {
+        if (leftType instanceof ASTTInt && rightType instanceof ASTTInt)
             return new ASTTBool();
-        }
-        if (leftType instanceof ASTTBool && rightType instanceof ASTTBool) {
+        if (leftType instanceof ASTTBool && rightType instanceof ASTTBool)
             return new ASTTBool();
-        }
 
        throw new TypeError("== requires matching int or bool operands, got " + 
                           leftType.toStr() + " and " + rightType.toStr());

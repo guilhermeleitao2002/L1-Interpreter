@@ -20,11 +20,10 @@ public class ASTStructLiteral implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        Map<String, ASTType> fieldTypes = new HashMap<>();
+        final Map<String, ASTType> fieldTypes = new HashMap<>();
         
-        for (Map.Entry<String, ASTNode> entry : this.fields.entrySet()) {
+        for (Map.Entry<String, ASTNode> entry : this.fields.entrySet())
             fieldTypes.put(entry.getKey(), entry.getValue().typecheck(gamma, typeDefs));
-        }
         
         return new ASTTStruct(fieldTypes);
     }

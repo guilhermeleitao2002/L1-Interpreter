@@ -44,28 +44,24 @@ public class ASTFun implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        if (this.paramTypes.isEmpty()) {
+        if (this.paramTypes.isEmpty())
             throw new TypeError("Function parameters must have type annotations");
-        }
         
-        if (this.params.size() != this.paramTypes.size()) {
+        if (this.params.size() != this.paramTypes.size())
             throw new TypeError("Number of parameters and type annotations must match");
-        }
         
         final TypeEnvironment newGamma = gamma.beginScope();
         
         // Add all parameters to environment
-        for (int i = 0; i < this.params.size(); i++) {
+        for (int i = 0; i < this.params.size(); i++)
             newGamma.assoc(this.params.get(i), this.paramTypes.get(i));
-        }
         
         final ASTType bodyType = this.body.typecheck(newGamma, typeDefs);
         
         // Build function type (right-associative for currying)
         ASTType resultType = bodyType;
-        for (int i = this.params.size() - 1; i >= 0; i--) {
+        for (int i = this.params.size() - 1; i >= 0; i--)
             resultType = new ASTTArrow(this.paramTypes.get(i), resultType);
-        }
         
         return resultType;
     }

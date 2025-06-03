@@ -24,26 +24,23 @@ public class ASTIf implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType condType = this.condition.typecheck(gamma, typeDefs);
+        final ASTType condType = this.condition.typecheck(gamma, typeDefs);
         
-        if (!(condType instanceof ASTTBool) && condType != null) {
+        if (!(condType instanceof ASTTBool) && condType != null)
             throw new TypeError("if condition must be bool, got " + condType.toStr());
-        }
         
-        ASTType thenType = this.thenBranch.typecheck(gamma, typeDefs);
-        ASTType elseType = this.elseBranch.typecheck(gamma, typeDefs);
+        final ASTType thenType = this.thenBranch.typecheck(gamma, typeDefs);
+        final ASTType elseType = this.elseBranch.typecheck(gamma, typeDefs);
         
         if (!Subtyping.isSubtype(thenType, elseType, typeDefs) && 
-            !Subtyping.isSubtype(elseType, thenType, typeDefs)) {
+            !Subtyping.isSubtype(elseType, thenType, typeDefs))
             throw new TypeError("if branches must have compatible types, got " + 
                               thenType.toStr() + " and " + elseType.toStr());
-        }
         
         // Return the more general type (supertype)
-        if (Subtyping.isSubtype(thenType, elseType, typeDefs)) {
+        if (Subtyping.isSubtype(thenType, elseType, typeDefs))
             return elseType;
-        } else {
+        else
             return thenType;
-        }
     }
 }

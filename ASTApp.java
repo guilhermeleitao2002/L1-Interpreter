@@ -37,16 +37,14 @@ public class ASTApp implements ASTNode {
         final ASTType funType = this.function.typecheck(gamma, typeDefs);
         final ASTType argType = this.argument.typecheck(gamma, typeDefs);
         
-        if (!(funType instanceof ASTTArrow)) {
+        if (!(funType instanceof ASTTArrow) && funType != null)
             throw new TypeError("Function application requires a function type, got " + funType.toStr());
-        }
         
         final ASTTArrow arrowType = (ASTTArrow) funType;
         
-        if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs)) {
+        if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs))
             throw new TypeError("Argument type " + argType.toStr() + 
                               " is not compatible with parameter type " + arrowType.getDomain().toStr());
-        }
         
         return arrowType.getCodomain();
     }

@@ -3,14 +3,12 @@ public class VList implements IValue {
     private final IValue tail;
     private final boolean isNil;
     
-    // Constructor for nil
     public VList() {
         this.head = null;
         this.tail = null;
         this.isNil = true;
     }
     
-    // Constructor for not nil
     public VList(IValue head, IValue tail) {
         this.head = head;
         this.tail = tail;

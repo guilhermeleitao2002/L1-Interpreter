@@ -24,12 +24,11 @@ public class ASTAnd implements ASTNode {
         ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
         ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
         
-        if (!(leftType instanceof ASTTBool) && leftType != null) {
+        if (!(leftType instanceof ASTTBool) && leftType != null)
             throw new TypeError("Left operand of && must be bool, got " + leftType.toStr());
-        }
-        if (!(rightType instanceof ASTTBool) && rightType != null) {
+            
+        if (!(rightType instanceof ASTTBool) && rightType != null)
             throw new TypeError("Right operand of && must be bool, got " + rightType.toStr());
-        }
         
         return new ASTTBool();
     }

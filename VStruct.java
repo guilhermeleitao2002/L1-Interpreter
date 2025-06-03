@@ -17,13 +17,17 @@ public class VStruct implements IValue {
     
     @Override
     public String toStr() {
-        StringBuilder sb = new StringBuilder("{ ");
+        final StringBuilder sb = new StringBuilder("{ ");
         boolean first = true;
+
         for (Map.Entry<String, IValue> entry : this.fields.entrySet()) {
-            if (!first) sb.append(", ");
+            if (!first)
+                sb.append(", ");
             sb.append(entry.getKey()).append(" = ").append(entry.getValue().toStr());
+
             first = false;
         }
+        
         sb.append(" }");
         return sb.toString();
     }

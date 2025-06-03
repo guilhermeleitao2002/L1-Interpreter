@@ -1,5 +1,5 @@
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ASTVariant implements ASTNode {
     private final String label;
@@ -18,11 +18,9 @@ public class ASTVariant implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        final ASTType valueType = this.value.typecheck(gamma, typeDefs);
+        final ASTType valueType = this.value.typecheck(gamma, typeDefs);        
+        final Map<String, ASTType> variants = new HashMap<>();
         
-        // For variant construction, we need type inference or explicit typing
-        // This is a simplified version - in practice, you'd need more sophisticated type inference
-        Map<String, ASTType> variants = new HashMap<>();
         variants.put(this.label, valueType);
         
         return new ASTTUnion(variants);

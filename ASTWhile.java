@@ -23,16 +23,14 @@ public class ASTWhile implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType condType = this.condition.typecheck(gamma, typeDefs);
+        final ASTType condType = this.condition.typecheck(gamma, typeDefs);
         
-        if (!(condType instanceof ASTTBool) && condType != null) {
+        if (!(condType instanceof ASTTBool) && condType != null)
             throw new TypeError("while condition must be bool, got " + condType.toStr());
-        }
         
-        // Type check the body but ignore its type
         this.body.typecheck(gamma, typeDefs);
         
-        // while always returns bool (false when loop exits)
+        // Always returns bool (false when loop exits)
         return new ASTTBool();
     }
 }

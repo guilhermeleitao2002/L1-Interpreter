@@ -4,6 +4,7 @@ public class L0int {
 		Parser parser = new Parser(System.in);
 		ASTNode exp;
 		
+		@SuppressWarnings("unused")
 		boolean showTypes = args.length > 0 && args[0].equals("--show-types");
 		
 		System.out.println("L0 interpreter PL MEIC 2024/25 (v0.0)\n");

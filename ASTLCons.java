@@ -18,19 +18,17 @@ public class ASTLCons implements ASTNode {
 
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType headType = this.head.typecheck(gamma, typeDefs);
-        ASTType tailType = this.tail.typecheck(gamma, typeDefs);
+        final ASTType headType = this.head.typecheck(gamma, typeDefs);
+        final ASTType tailType = this.tail.typecheck(gamma, typeDefs);
         
-        if (!(tailType instanceof ASTTList) && tailType != null) {
+        if (!(tailType instanceof ASTTList) && tailType != null)
             throw new TypeError("Lazy cons tail must be a list type, got " + tailType.toStr());
-        }
         
-        ASTType listElementType = ((ASTTList) tailType).getElementType();
+        final ASTType listElementType = ((ASTTList) tailType).getElementType();
         
-        if (!Subtyping.isSubtype(headType, listElementType, typeDefs)) {
+        if (!Subtyping.isSubtype(headType, listElementType, typeDefs))
             throw new TypeError("Lazy list element type mismatch: expected " + listElementType.toStr() + 
                             ", got " + headType.toStr());
-        }
         
         return new ASTTList(listElementType);
     }

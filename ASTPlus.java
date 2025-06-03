@@ -30,18 +30,16 @@ public class ASTPlus implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
-        ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
+        final ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
+        final ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
         
         // Integer addition
-        if (leftType instanceof ASTTInt && rightType instanceof ASTTInt) {
+        if (leftType instanceof ASTTInt && rightType instanceof ASTTInt)
             return new ASTTInt();
-        }
         
         // String concatenation
-        if (leftType instanceof ASTTString || rightType instanceof ASTTString) {
+        if (leftType instanceof ASTTString || rightType instanceof ASTTString)
             return new ASTTString();
-        }
         
         throw new TypeError("+ operator requires int or string operands, got " + 
                           leftType.toStr() + " and " + rightType.toStr());

@@ -13,13 +13,16 @@ public class ASTTUnion implements ASTType {
     
     @Override
     public String toStr() {
-        StringBuilder sb = new StringBuilder("union { ");
+        final StringBuilder sb = new StringBuilder("union { ");
         boolean first = true;
+        
         for (Map.Entry<String, ASTType> entry : variants.entrySet()) {
-            if (!first) sb.append(", ");
+            if (!first)
+                sb.append(", ");
             sb.append(entry.getKey()).append(": ").append(entry.getValue().toStr());
             first = false;
         }
+
         sb.append(" }");
         return sb.toString();
     }

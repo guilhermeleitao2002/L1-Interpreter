@@ -150,13 +150,13 @@ ASTNode Let() :
 }
 {
   (
-    // First handle any type definitions
+    // First we handle any type definitions
     (
       <TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
       { typeDefs.put(n.image, typeExpr); }
     )*
     
-    // Then handle let bindings or just a sequence
+    // Only after do we handle let bindings, or just a sequence...
     (
       (<LET> n=<Id> <EQUAL> e1 = BA() <SEMIC>
         { decls.add(new Bind(n.image, e1)); }
@@ -192,7 +192,7 @@ ASTNode Seq() :
 		  t1 = new ASTSeq(t1, t2);
      }
 		)*
-     { return t1; }  
+    { return t1; }  
 }
 
 ASTNode SeqExp() :

@@ -21,11 +21,13 @@ public class TypeDefEnvironment {
     public final void assoc(String id, ASTType type) throws TypeError {
         if (this.typeDefs.containsKey(id))
             throw new TypeError("Type " + id + " already defined in this scope");
+
         this.typeDefs.put(id, type);
     }
 
     public final ASTType find(String id) throws TypeError {
         final ASTType type = this.typeDefs.get(id);
+        
         if (type != null)
             return type;
         if (this.anc != null)

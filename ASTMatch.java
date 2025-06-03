@@ -54,36 +54,32 @@ public class ASTMatch implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType exprType = this.expr.typecheck(gamma, typeDefs);
+        final ASTType exprType = this.expr.typecheck(gamma, typeDefs);
         
-        if (!(exprType instanceof ASTTList)) {
+        if (!(exprType instanceof ASTTList) && exprType != null)
             throw new TypeError("List match requires a list type, got " + exprType.toStr());
-        }
         
-        ASTTList listType = (ASTTList) exprType;
-        ASTType elementType = listType.getElementType();
+        final ASTTList listType = (ASTTList) exprType;
+        final ASTType elementType = listType.getElementType();
         
         // Type check nil case
-        ASTType nilCaseType = this.nilCase.typecheck(gamma, typeDefs);
+        final ASTType nilCaseType = this.nilCase.typecheck(gamma, typeDefs);
         
-        // Type check cons case with head and tail variables
-        TypeEnvironment consEnv = gamma.beginScope();
+        // Type check cons case
+        final TypeEnvironment consEnv = gamma.beginScope();
         consEnv.assoc(this.headVar, elementType);
         consEnv.assoc(this.tailVar, listType);
-        ASTType consCaseType = this.consCase.typecheck(consEnv, typeDefs);
+        final ASTType consCaseType = this.consCase.typecheck(consEnv, typeDefs);
         
-        // Both cases must have compatible types
         if (!Subtyping.isSubtype(nilCaseType, consCaseType, typeDefs) && 
-            !Subtyping.isSubtype(consCaseType, nilCaseType, typeDefs)) {
+            !Subtyping.isSubtype(consCaseType, nilCaseType, typeDefs))
             throw new TypeError("Match cases must have compatible types, got " + 
                               nilCaseType.toStr() + " and " + consCaseType.toStr());
-        }
         
         // Return the more general type
-        if (Subtyping.isSubtype(nilCaseType, consCaseType, typeDefs)) {
+        if (Subtyping.isSubtype(nilCaseType, consCaseType, typeDefs))
             return consCaseType;
-        } else {
+        else
             return nilCaseType;
-        }
     }
 }

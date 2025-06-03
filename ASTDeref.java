@@ -16,11 +16,10 @@ public class ASTDeref implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType exprType = this.expr.typecheck(gamma, typeDefs);
+        final ASTType exprType = this.expr.typecheck(gamma, typeDefs);
         
-        if (!(exprType instanceof ASTTRef) && exprType != null) {
+        if (!(exprType instanceof ASTTRef) && exprType != null)
             throw new TypeError("Cannot dereference non-reference type " + exprType.toStr());
-        }
         
         return ((ASTTRef) exprType).getType();
     }

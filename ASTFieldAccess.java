@@ -11,16 +11,14 @@ public class ASTFieldAccess implements ASTNode {
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue structValue = this.struct.eval(e);
         
-        if (!(structValue instanceof VStruct)) {
+        if (!(structValue instanceof VStruct))
             throw new InterpreterError("Field access requires a struct");
-        }
         
         final VStruct vStruct = (VStruct) structValue;
         final IValue fieldValue = vStruct.getField(this.fieldName);
         
-        if (fieldValue == null) {
+        if (fieldValue == null)
             throw new InterpreterError("Field " + this.fieldName + " not found");
-        }
         
         return fieldValue;
     }
@@ -30,20 +28,17 @@ public class ASTFieldAccess implements ASTNode {
         ASTType structType = this.struct.typecheck(gamma, typeDefs);
         
         // Resolve type if it's a type identifier
-        if (structType instanceof ASTTId aSTTId) {
+        if (structType instanceof ASTTId aSTTId)
             structType = typeDefs.find(aSTTId.id);
-        }
         
-        if (!(structType instanceof ASTTStruct) && structType != null) {
+        if (!(structType instanceof ASTTStruct) && structType != null)
             throw new TypeError("Field access requires a struct type, got " + structType.toStr());
-        }
         
         final ASTTStruct structTypeAST = (ASTTStruct) structType;
         final ASTType fieldType = structTypeAST.getFields().get(this.fieldName);
         
-        if (fieldType == null) {
+        if (fieldType == null)
             throw new TypeError("Field " + this.fieldName + " not found in struct");
-        }
         
         return fieldType;
     }

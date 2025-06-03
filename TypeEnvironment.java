@@ -25,11 +25,13 @@ public class TypeEnvironment {
     public final void assoc(String id, ASTType type) throws TypeError {
         if (this.bindings.containsKey(id))
             throw new TypeError("Variable " + id + " already defined in this scope");
+
         this.bindings.put(id, type);
     }
 
     public final ASTType find(String id) throws TypeError {
         final ASTType type = this.bindings.get(id);
+
         if (type != null)
             return type;
         if (this.anc != null)
@@ -41,6 +43,7 @@ public class TypeEnvironment {
     public final TypeEnvironment copy() {
         final TypeEnvironment newEnv = new TypeEnvironment(this.anc);
         newEnv.bindings.putAll(this.bindings);
+        
         return newEnv;
     }
 }

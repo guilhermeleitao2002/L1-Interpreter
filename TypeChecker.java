@@ -1,7 +1,8 @@
 public class TypeChecker {
     public static ASTType typecheck(ASTNode program) throws TypeError {
-        TypeEnvironment gamma = new TypeEnvironment();
-        TypeDefEnvironment typeDefs = new TypeDefEnvironment();
+        final TypeEnvironment gamma = new TypeEnvironment();
+        final TypeDefEnvironment typeDefs = new TypeDefEnvironment();
+        
         return program.typecheck(gamma, typeDefs);
     }
     

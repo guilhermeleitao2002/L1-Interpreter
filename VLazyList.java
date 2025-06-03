@@ -27,7 +27,7 @@ public class VLazyList implements IValue {
     }
     
     public final boolean isNil() throws InterpreterError {
-        // A lazy list is never nil directly - we need to evaluate it first
+        // A lazy list is never nil directly... we need to evaluate it first
         evaluate();
 
         if (this.tail instanceof VList vList)

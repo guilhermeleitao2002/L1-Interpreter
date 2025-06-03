@@ -17,11 +17,10 @@ public class ASTNeg implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType expType = this.exp.typecheck(gamma, typeDefs);
+        final ASTType expType = this.exp.typecheck(gamma, typeDefs);
         
-        if (!(expType instanceof ASTTInt) && expType != null) {
+        if (!(expType instanceof ASTTInt) && expType != null)
             throw new TypeError("Operand of unary - must be int, got " + expType.toStr());
-        }
         
         return new ASTTInt();
     }
