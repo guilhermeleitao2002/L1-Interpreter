@@ -1,0 +1,14 @@
+type Counter = struct { count: ref<int>, failed: ref<bool> };
+type Counter2 = struct { count: ref<int>, failed: ref<bool>, test: int };
+let c = { count = box(0), failed = box(false), test = 1000 };
+let increment = fn c: Counter => {
+  c.count := !c.count + 1;
+  if (!c.count > 10) {
+    c.failed := true
+  } else {
+    println("Count is now: " + !c.count + ", test: " + c.test);
+    false
+  }
+};
+increment(c);
+increment(c);;
