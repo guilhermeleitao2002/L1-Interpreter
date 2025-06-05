@@ -30,7 +30,7 @@ This script:
 ## Testing
 
 The test suite includes:
-- **32 functionality tests** (`tests/functionality/test*.l0`) - core language features
+- **33 functionality tests** (`tests/functionality/test*.l0`) - core language features
 - **8 syntactic tests** (`tests/syntax/test*.l0`) - syntactic errors
 - **10 typechecking tests** (`tests/typecheck/test*.l0`) - type errors
 
