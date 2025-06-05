@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class ASTApp implements ASTNode {
     private final ASTNode function;
     private final ASTNode argument;
@@ -37,15 +39,37 @@ public class ASTApp implements ASTNode {
         final ASTType funType = this.function.typecheck(gamma, typeDefs);
         final ASTType argType = this.argument.typecheck(gamma, typeDefs);
         
-        if (!(funType instanceof ASTTArrow) && funType != null)
+        // Handle both ASTTFunction and ASTTArrow
+        if (funType instanceof ASTTFunction aSTTFunction) {
+            final ASTTFunction funcType = aSTTFunction;
+            final List<ASTType> paramTypes = funcType.getParamTypes();
+            
+            if (paramTypes.isEmpty()) {
+                throw new TypeError("Function application requires a function type, got " + funType.toStr());
+            }
+            
+            if (!Subtyping.isSubtype(argType, paramTypes.get(0), typeDefs))
+                throw new TypeError("Argument type " + argType.toStr() + 
+                                " is not compatible with parameter type " + paramTypes.get(0).toStr());
+            
+            if (paramTypes.size() == 1)
+                return funcType.getReturnType();
+            else {
+                final List<ASTType> remainingParams = paramTypes.subList(1, paramTypes.size());
+                return new ASTTFunction(remainingParams, funcType.getReturnType());
+            }
+            
+        } else if (funType instanceof ASTTArrow aSTTArrow) {
+            final ASTTArrow arrowType = aSTTArrow;
+            
+            if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs)) {
+                throw new TypeError("Argument type " + argType.toStr() + 
+                                " is not compatible with parameter type " + arrowType.getDomain().toStr());
+            }
+            
+            return arrowType.getCodomain();
+            
+        } else
             throw new TypeError("Function application requires a function type, got " + funType.toStr());
-        
-        final ASTTArrow arrowType = (ASTTArrow) funType;
-        
-        if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs))
-            throw new TypeError("Argument type " + argType.toStr() + 
-                              " is not compatible with parameter type " + arrowType.getDomain().toStr());
-        
-        return arrowType.getCodomain();
     }
 }

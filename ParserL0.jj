@@ -348,7 +348,6 @@ ASTNode Fact() :
         <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() 
         { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
         |
-        // Union match cases
         n=<Id> { String firstCase = n.image; } <LPAR> n=<Id> { String firstVar = n.image; } <RPAR> <MATCH_ARROW> e1=Let() 
         { casesBranches.put(firstCase, new ASTCaseBranch(firstVar, e1)); }
         (
@@ -360,7 +359,7 @@ ASTNode Fact() :
       <RBRA>
     | <FN> 
       (
-        LOOKAHEAD(3) n=<Id> <COLON> paramType=ParamType() 
+        LOOKAHEAD(3) n=<Id> <COLON> paramType=TypeFactor() 
         { 
           params.add(n.image); 
           paramTypes.add(paramType); 
@@ -397,41 +396,10 @@ ASTNode Fact() :
   { return t; }
 }
 
-ASTType TypeExpr():
-{
-  ASTType t1, t2;
-  List<ASTType> paramTypes = new ArrayList<ASTType>();
-}
-{
-  t1 = TypeFactor() { paramTypes.add(t1); }
-  (
-    LOOKAHEAD(2) <COMMA> t2 = TypeFactor() { paramTypes.add(t2); }
-  )*
-  (
-    <MATCH_ARROW> t2 = TypeExpr() 
-    {
-      ASTType result = t2;
-      for (int i = paramTypes.size() - 1; i >= 0; i--) {
-        result = new ASTTArrow(paramTypes.get(i), result);
-      }
-      t1 = result;
-    }
-  |
-    {
-      if (paramTypes.size() > 1) {
-        throw new ParseException("Multiple types require -> for function type");
-      }
-      t1 = paramTypes.get(0);
-    }
-  )
-  { return t1; }
-}
-
-ASTType TypeFactor():
+ASTType AtomicType():
 {
   ASTType t;
   Token id;
-  Map<String, ASTType> fields;
 }
 {
   (
@@ -443,19 +411,63 @@ ASTType TypeFactor():
     |
     <STRING> { t = new ASTTString(); }
     |
-    <REF> <LT> t = TypeExpr() <GT> { t = new ASTTRef(t); }
+    id = <Id> { t = new ASTTId(id.image); }
+  )
+  { return t; }
+}
+
+ASTType TypeFactor():
+{
+  ASTType t;
+  ASTType elementType;
+  Map<String, ASTType> fields;
+}
+{
+  (
+    t = AtomicType()
     |
-    <LIST> <LT> t = TypeExpr() <GT> { t = new ASTTList(t); }
+    <REF> <LT> elementType = TypeExpr() <GT> { t = new ASTTRef(elementType); }
+    |
+    <LIST> <LT> elementType = TypeExpr() <GT> { t = new ASTTList(elementType); }
     |
     <STRUCT> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
     |
     <UNION> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTUnion(fields); }
     |
     <LPAR> t = TypeExpr() <RPAR>
-    |
-    id = <Id> { t = new ASTTId(id.image); }
   )
   { return t; }
+}
+
+ASTType TypeExpr():
+{
+  ASTType t1, t2;
+  List<ASTType> paramTypes = new ArrayList<ASTType>();
+}
+{
+  t1 = TypeFactor() { paramTypes.add(t1); }
+  (LOOKAHEAD(2)
+    <COMMA> t2 = TypeFactor() { paramTypes.add(t2); }
+  )*
+  (
+    <MATCH_ARROW> t2 = TypeExpr() 
+    {
+      if (paramTypes.size() > 1) {
+        t1 = new ASTTFunction(paramTypes, t2);
+      } else {
+        t1 = new ASTTArrow(paramTypes.get(0), t2);
+      }
+    }
+  |
+    {
+      if (paramTypes.size() == 1) {
+        t1 = paramTypes.get(0);
+      } else {
+        throw new ParseException("Function type with multiple parameters requires -> return_type");
+      }
+    }
+  )
+  { return t1; }
 }
 
 Map<String, ASTType> FieldTypeList():
@@ -466,10 +478,10 @@ Map<String, ASTType> FieldTypeList():
 }
 {
   (
-    fieldName = <Id> <COLON> fieldType = TypeExpr() 
+    fieldName = <Id> <COLON> fieldType = TypeFactor() 
     { fields.put(fieldName.image, fieldType); }
     (
-      <COMMA> fieldName = <Id> <COLON> fieldType = TypeExpr()
+      <COMMA> fieldName = <Id> <COLON> fieldType = TypeFactor()
       { fields.put(fieldName.image, fieldType); }
     )*
   )?

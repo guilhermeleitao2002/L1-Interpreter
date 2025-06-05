@@ -57,7 +57,17 @@ public class ASTFun implements ASTNode {
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
         if (this.expectedType != null) {
-            final List<ASTType> inferredParamTypes = extractParameterTypes(this.expectedType);
+            List<ASTType> inferredParamTypes;
+            ASTType expectedReturnType;
+            
+            if (this.expectedType instanceof ASTTFunction aSTTFunction) {
+                final ASTTFunction funcType = aSTTFunction;
+                inferredParamTypes = funcType.getParamTypes();
+                expectedReturnType = funcType.getReturnType();
+            } else {
+                inferredParamTypes = extractParameterTypes(this.expectedType);
+                expectedReturnType = extractReturnType(this.expectedType);
+            }
             
             if (inferredParamTypes.size() != this.params.size())
                 throw new TypeError("Parameter count mismatch: expected " + inferredParamTypes.size() + 
@@ -69,19 +79,21 @@ public class ASTFun implements ASTNode {
                 newGamma.assoc(this.params.get(i), inferredParamTypes.get(i));
             
             final ASTType bodyType = this.body.typecheck(newGamma, typeDefs);
-            final ASTType expectedReturnType = extractReturnType(this.expectedType);
             
             if (!Subtyping.isSubtype(bodyType, expectedReturnType, typeDefs))
                 throw new TypeError("Function body type " + bodyType.toStr() + 
                                 " does not match expected return type " + expectedReturnType.toStr());
             
-            return this.expectedType;
+            if (this.expectedType instanceof ASTTFunction aSTTFunction)
+                return aSTTFunction.toCurriedType();
+            else
+                return this.expectedType;
+
         } else if (!this.paramTypes.isEmpty()) {
             final TypeEnvironment newGamma = gamma.beginScope();
             
-            for (int i = 0; i < this.params.size(); i++) {
+            for (int i = 0; i < this.params.size(); i++)
                 newGamma.assoc(this.params.get(i), this.paramTypes.get(i));
-            }
             
             final ASTType bodyType = this.body.typecheck(newGamma, typeDefs);
             
@@ -90,8 +102,9 @@ public class ASTFun implements ASTNode {
                 resultType = new ASTTArrow(this.paramTypes.get(i), resultType);
             
             return resultType;
-        } else
+        } else {
             throw new TypeError("Function parameters need type annotations when no function type is declared");
+        }
     }
 
     private List<ASTType> extractParameterTypes(ASTType functionType) throws TypeError {

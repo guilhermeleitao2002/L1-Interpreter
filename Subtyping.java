@@ -3,6 +3,11 @@ import java.util.*;
 public class Subtyping {
     
     public static boolean isSubtype(ASTType subType, ASTType superType, TypeDefEnvironment typeDefs) throws TypeError {
+        if (subType instanceof ASTTFunction aSTTFunction)
+            subType = aSTTFunction.toCurriedType();
+        if (superType instanceof ASTTFunction aSTTFunction)
+            superType = aSTTFunction.toCurriedType();
+
         // A <: A
         if (typeEquals(subType, superType, typeDefs)) {
             return true;
