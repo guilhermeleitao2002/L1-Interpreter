@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ASTFun implements ASTNode {
@@ -60,13 +61,16 @@ public class ASTFun implements ASTNode {
             List<ASTType> inferredParamTypes;
             ASTType expectedReturnType;
             
-            if (this.expectedType instanceof ASTTFunction aSTTFunction) {
-                final ASTTFunction funcType = aSTTFunction;
-                inferredParamTypes = funcType.getParamTypes();
-                expectedReturnType = funcType.getReturnType();
-            } else {
-                inferredParamTypes = extractParameterTypes(this.expectedType);
-                expectedReturnType = extractReturnType(this.expectedType);
+            switch (this.expectedType) {
+                case ASTTFunction funcType -> {
+                    inferredParamTypes = funcType.getParamTypes();
+                    expectedReturnType = funcType.getReturnType();
+                }
+                case ASTTArrow arrowType -> {
+                    inferredParamTypes = Arrays.asList(arrowType.getDomain());
+                    expectedReturnType = arrowType.getCodomain();
+                }
+                default -> throw new TypeError("Expected function type, got " + this.expectedType.toStr());
             }
             
             if (inferredParamTypes.size() != this.params.size())
@@ -84,11 +88,11 @@ public class ASTFun implements ASTNode {
                 throw new TypeError("Function body type " + bodyType.toStr() + 
                                 " does not match expected return type " + expectedReturnType.toStr());
             
-            if (this.expectedType instanceof ASTTFunction aSTTFunction)
-                return aSTTFunction.toCurriedType();
-            else
-                return this.expectedType;
+            ASTType result = expectedReturnType;
+            for (int i = inferredParamTypes.size() - 1; i >= 0; i--)
+                result = new ASTTArrow(inferredParamTypes.get(i), result);
 
+            return result;
         } else if (!this.paramTypes.isEmpty()) {
             final TypeEnvironment newGamma = gamma.beginScope();
             
@@ -105,26 +109,5 @@ public class ASTFun implements ASTNode {
         } else {
             throw new TypeError("Function parameters need type annotations when no function type is declared");
         }
-    }
-
-    private List<ASTType> extractParameterTypes(ASTType functionType) throws TypeError {
-        final List<ASTType> paramTypes = new ArrayList<>();
-        ASTType current = functionType;
-        
-        while (current instanceof ASTTArrow) {
-            final ASTTArrow arrow = (ASTTArrow) current;
-            paramTypes.add(arrow.getDomain());
-            current = arrow.getCodomain();
-        }
-        
-        return paramTypes;
-    }
-
-    private ASTType extractReturnType(ASTType functionType) {
-        ASTType current = functionType;
-        while (current instanceof ASTTArrow)
-            current = ((ASTTArrow) current).getCodomain();
-
-        return current;
     }
 }

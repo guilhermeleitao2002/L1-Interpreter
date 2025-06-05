@@ -452,11 +452,8 @@ ASTType TypeExpr():
   (
     <MATCH_ARROW> t2 = TypeExpr() 
     {
-      if (paramTypes.size() > 1) {
-        t1 = new ASTTFunction(paramTypes, t2);
-      } else {
-        t1 = new ASTTArrow(paramTypes.get(0), t2);
-      }
+      // Always create ASTTFunction for consistency
+      t1 = new ASTTFunction(paramTypes, t2);
     }
   |
     {
