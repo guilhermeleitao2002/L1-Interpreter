@@ -358,14 +358,26 @@ ASTNode Fact() :
         { t = new ASTCaseMatch(t, casesBranches); }
       )
       <RBRA>
-    | <FN> n=<Id> { params.add(n.image); }
+    | <FN> 
       (
-        LOOKAHEAD(2) <COLON> paramType=TypeExpr() { paramTypes.add(paramType); }
-        ( <COMMA> n = <Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); } )*
-        <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, paramTypes, e2); }
+        LOOKAHEAD(3) n=<Id> <COLON> paramType=ParamType() 
+        { 
+          params.add(n.image); 
+          paramTypes.add(paramType); 
+        }
+        ( <COMMA> n = <Id> <COLON> paramType=ParamType() 
+          { 
+            params.add(n.image); 
+            paramTypes.add(paramType); 
+          } 
+        )*
+        <ARROW> <LBRA> e2 = Let() <RBRA> 
+        { t = new ASTFun(params, paramTypes, e2); }
         |
+        n=<Id> { params.add(n.image); }
         ( <COMMA> n = <Id> { params.add(n.image); } )*
-        <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
+        <ARROW> <LBRA> e2 = Let() <RBRA> 
+        { t = new ASTFun(params, e2); }
       )
     | <LBRA>
       (
@@ -462,4 +474,13 @@ Map<String, ASTType> FieldTypeList():
     )*
   )?
   { return fields; }
+}
+
+ASTType ParamType():
+{
+  ASTType t;
+}
+{
+  t = TypeFactor()
+  { return t; }
 }
