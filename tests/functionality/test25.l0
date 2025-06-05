@@ -1,4 +1,4 @@
-type Result = union { Ok: int, Err: string };
+type Result = union { Ok:int, Err:string };
 let success = Ok(42);
 match success {
   Ok(x) -> x * 2

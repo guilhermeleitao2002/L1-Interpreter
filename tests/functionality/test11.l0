@@ -1,9 +1,9 @@
 let x=1 ;
-let f = fn y: int => {
+let f:int -> int = fn y => {
            let k = x*2;
   	   y+x*k
         };
-let g = fn x: int, u: int -> int =>
+let g:int,(int->int) -> int = fn x, u =>
            { u(x) + f(x) };
 g  (f(3)) (f) 
 ;;

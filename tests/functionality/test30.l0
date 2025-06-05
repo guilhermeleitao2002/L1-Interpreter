@@ -1,5 +1,5 @@
-let applyTwice = fn f: int -> int => { fn x: int => {
+let applyTwice:(int -> int) -> (int -> int) = fn f => { fn x:int => {
   f(f(x))
 }};
-let inc = fn x: int => { x + 1 };
+let inc:int -> int = fn x => { x + 1 };
 applyTwice(inc)(10);;

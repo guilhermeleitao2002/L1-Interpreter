@@ -1,5 +1,5 @@
-type Point = struct { x: int, y: int };
-type Person = struct { name: string, age: int };
-let p = { x = 3, y = 4 };
-let john = { name = "John", age = 25 };
+type Point = struct { x:int, y:int };
+type Person = struct { name:string, age:int };
+let p = { x=3, y=4 };
+let john = { name="John", age=25 };
 p.x + p.y + john.age;;
