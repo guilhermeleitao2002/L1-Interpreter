@@ -14,9 +14,8 @@ public class ASTOr implements ASTNode {
             throw new InterpreterError("Type error: || requires boolean operands");
         
         final IValue v2 = this.rhs.eval(e);
-        if (!(v2 instanceof VBool)) {
+        if (!(v2 instanceof VBool))
             throw new InterpreterError("Type error: || requires boolean operands");
-        }
         
         return new VBool(((VBool)v1).getValue() || ((VBool)v2).getValue());
     }

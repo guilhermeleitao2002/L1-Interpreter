@@ -8,9 +8,7 @@ public class ASTPrintln implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue value = this.expr.eval(e);
-
         System.out.println(value.toStr());
-
         return value;
     }
 

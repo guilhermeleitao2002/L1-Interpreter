@@ -4,6 +4,10 @@ public class ASTTList implements ASTType {
     public ASTTList(ASTType eltt) {
         this.elt = eltt;
     }
+
+    public ASTTList() {
+        this.elt = new ASTTInt(); // Default to int type for lists - why not...
+    }
     
     public ASTType getElementType() {
         return this.elt;

@@ -4,5 +4,3 @@ public class ASTTInt implements ASTType {
         return "int";
     }
 }
-
-

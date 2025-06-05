@@ -19,11 +19,10 @@ public class ASTPlus implements ASTNode {
             return new VInt(i1 + i2);
         }
         
-        // String concatenation (including type conversion)
+        // String concatenation
         if ((v1 instanceof VString || v2 instanceof VString) &&
-            v1 != null && v2 != null) {
+            v1 != null && v2 != null)
             return new VString(v1.toStr() + v2.toStr());
-        }
         
         throw new InterpreterError("Illegal types to + operator");
     }
@@ -33,11 +32,9 @@ public class ASTPlus implements ASTNode {
         final ASTType leftType = this.lhs.typecheck(gamma, typeDefs);
         final ASTType rightType = this.rhs.typecheck(gamma, typeDefs);
         
-        // Integer addition
         if (leftType instanceof ASTTInt && rightType instanceof ASTTInt)
             return new ASTTInt();
         
-        // String concatenation
         if (leftType instanceof ASTTString || rightType instanceof ASTTString)
             return new ASTTString();
         

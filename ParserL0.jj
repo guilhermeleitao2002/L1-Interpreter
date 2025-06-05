@@ -155,7 +155,7 @@ ASTNode Let() :
       <TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
       { typeDefs.put(n.image, typeExpr); }
     )*    
-    // Let bindings
+    // then Let bindings
     (
       (<LET> n=<Id> 
         (
@@ -459,7 +459,7 @@ ASTType TypeExpr():
       if (paramTypes.size() == 1) {
         t1 = paramTypes.get(0);
       } else {
-        throw new ParseException("Function type with multiple parameters requires -> return_type");
+        throw new ParseException("Function type with parameters requires -> returnType");
       }
     }
   )

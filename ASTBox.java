@@ -13,7 +13,7 @@ public class ASTBox implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        ASTType exprType = this.expr.typecheck(gamma, typeDefs);
+        final ASTType exprType = this.expr.typecheck(gamma, typeDefs);
         return new ASTTRef(exprType);
     }
 }

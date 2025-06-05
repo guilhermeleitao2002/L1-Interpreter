@@ -20,6 +20,7 @@ public class ASTTStruct implements ASTType {
             if (!first)
                 sb.append(", ");
             sb.append(entry.getKey()).append(": ").append(entry.getValue().toStr());
+            
             first = false;
         }
         

@@ -1,9 +1,10 @@
 import java.util.*;
 
 public class Subtyping {
-    private static Set<String> resolvingTypes = new HashSet<>();
+    private final static Set<String> resolvingTypes = new HashSet<>();
     
     public static boolean isSubtype(ASTType subType, ASTType superType, TypeDefEnvironment typeDefs) throws TypeError {
+        // Handle curried functions
         if (subType instanceof ASTTFunction aSTTFunction)
             subType = aSTTFunction.toCurriedType();
         if (superType instanceof ASTTFunction aSTTFunction)
@@ -63,7 +64,7 @@ public class Subtyping {
             final ASTType superFieldType = superField.getValue();
             
             if (!subFields.containsKey(fieldName))
-                return false; // Missing required field
+                return false; // Missing mandatory field
             
             final ASTType subFieldType = subFields.get(fieldName);
             if (!isSubtype(subFieldType, superFieldType, typeDefs))
@@ -93,6 +94,7 @@ public class Subtyping {
     }
     
     private static boolean typeEquals(ASTType type1, ASTType type2, TypeDefEnvironment typeDefs) throws TypeError {
+        // Handle direct type IDs
         if (type1 instanceof ASTTId && type2 instanceof ASTTId)
             return ((ASTTId) type1).getId().equals(((ASTTId) type2).getId());
         
@@ -108,32 +110,27 @@ public class Subtyping {
         
         if (resolved1 instanceof ASTTArrow arrow1) {
             final ASTTArrow arrow2 = (ASTTArrow) resolved2;
-
             return typeEquals(arrow1.dom, arrow2.dom, typeDefs) && 
                    typeEquals(arrow1.codom, arrow2.codom, typeDefs);
         }
         
         if (resolved1 instanceof ASTTRef ref1) {
             final ASTTRef ref2 = (ASTTRef) resolved2;
-
             return typeEquals(ref1.getType(), ref2.getType(), typeDefs);
         }
         
         if (resolved1 instanceof ASTTList list1) {
             final ASTTList list2 = (ASTTList) resolved2;
-
             return typeEquals(list1.getElementType(), list2.getElementType(), typeDefs);
         }
         
         if (resolved1 instanceof ASTTStruct struct1) {
             final ASTTStruct struct2 = (ASTTStruct) resolved2;
-
             return structTypesEqual(struct1, struct2, typeDefs);
         }
         
         if (resolved1 instanceof ASTTUnion union1) {
-            final ASTTUnion union2 = (ASTTUnion) resolved2;
-            
+            final ASTTUnion union2 = (ASTTUnion) resolved2;            
             return unionTypesEqual(union1, union2, typeDefs);
         }
         

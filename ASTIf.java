@@ -37,7 +37,7 @@ public class ASTIf implements ASTNode {
             throw new TypeError("if branches must have compatible types, got " + 
                               thenType.toStr() + " and " + elseType.toStr());
         
-        // Return the more general type (supertype)
+        // Return the more general type
         if (Subtyping.isSubtype(thenType, elseType, typeDefs))
             return elseType;
         else

@@ -27,7 +27,7 @@ public class ASTFieldAccess implements ASTNode {
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
         ASTType structType = this.struct.typecheck(gamma, typeDefs);
         
-        // Resolve type if it's a type identifier
+        // Resolve type if its a type id
         if (structType instanceof ASTTId aSTTId)
             structType = typeDefs.find(aSTTId.id);
         

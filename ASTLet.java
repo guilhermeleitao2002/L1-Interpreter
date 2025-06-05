@@ -29,7 +29,7 @@ public class ASTLet implements ASTNode {
             if (decl.hasType()) {
                 final ASTType declaredType = decl.getType();
                 
-                // For functions, set expected type and add to environment first (enables recursion)
+                // For functions, set expected type and add to environment first - for recursion!
                 if (decl.getExp() instanceof ASTFun aSTFun) {
                     final ASTFun fun = aSTFun;
                     fun.setExpectedType(declaredType);
@@ -38,14 +38,12 @@ public class ASTLet implements ASTNode {
                 
                 final ASTType exprType = decl.getExp().typecheck(newGamma, typeDefs);
                 
-                if (!Subtyping.isSubtype(exprType, declaredType, typeDefs)) {
+                if (!Subtyping.isSubtype(exprType, declaredType, typeDefs))
                     throw new TypeError("Expression type " + exprType.toStr() + 
                                     " does not match declared type " + declaredType.toStr());
-                }
                 
-                if (!(decl.getExp() instanceof ASTFun)) {
+                if (!(decl.getExp() instanceof ASTFun))
                     newGamma.assoc(decl.getId(), declaredType);
-                }
             } else {
                 final ASTType declType = decl.getExp().typecheck(newGamma, typeDefs);
                 newGamma.assoc(decl.getId(), declType);

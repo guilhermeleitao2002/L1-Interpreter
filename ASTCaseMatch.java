@@ -32,7 +32,7 @@ public class ASTCaseMatch implements ASTNode {
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
         ASTType exprType = this.expr.typecheck(gamma, typeDefs);
         
-        // Resolve type if it's a type identifier
+        // Resolve type if its a type id
         if (exprType instanceof ASTTId aSTTId)
             exprType = typeDefs.find(aSTTId.id);
         
@@ -64,7 +64,7 @@ public class ASTCaseMatch implements ASTNode {
                 throw new TypeError("All case branches must have compatible types");
         }
         
-        // Check that all variants are covered
+        // Check if all variants are covered
         for (String variantName : variants.keySet())
             if (!this.cases.containsKey(variantName))
                 throw new TypeError("Missing case for variant " + variantName);

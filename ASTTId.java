@@ -13,5 +13,4 @@ public	class ASTTId implements ASTType	{
     public String toStr() {
         return this.id;
     }
-
 }

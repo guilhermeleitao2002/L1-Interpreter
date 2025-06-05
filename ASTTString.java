@@ -5,5 +5,4 @@ public class ASTTString implements ASTType {
     public String toStr() {
         return "string";
     }
-
 }

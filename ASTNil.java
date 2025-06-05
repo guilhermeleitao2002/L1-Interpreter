@@ -19,7 +19,7 @@ public class ASTNil implements ASTNode {
         if (this.explicitType != null)
             return this.explicitType;
         
-        // Lets assume a polymorphic int list type as default
-        return new ASTTList(new ASTTInt());
+        // default
+        return new ASTTList();
     }
 }

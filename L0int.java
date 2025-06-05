@@ -14,7 +14,6 @@ public class L0int {
 				exp = Parser.Start();
 				if (exp==null) System.exit(0);
 				
-				// Add static type checking
 				@SuppressWarnings("unused")
 				ASTType type = TypeChecker.typecheck(exp);
 				

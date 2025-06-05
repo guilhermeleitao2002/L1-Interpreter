@@ -1,4 +1,3 @@
-import java.util.List;
 
 public class ASTApp implements ASTNode {
     private final ASTNode function;
@@ -13,7 +12,7 @@ public class ASTApp implements ASTNode {
     public IValue eval(Environment<IValue> e) throws InterpreterError {
         final IValue currentValue = this.function.eval(e);
 
-        // Handle union constructors
+        // Handle sum constructors
         if (currentValue instanceof VConstructor constructor) {
             IValue argValue = this.argument.eval(e);
             return new VVariant(constructor.getConstructorName(), argValue);
@@ -40,36 +39,28 @@ public class ASTApp implements ASTNode {
         final ASTType argType = this.argument.typecheck(gamma, typeDefs);
         
         // Handle both ASTTFunction and ASTTArrow
-        if (funType instanceof ASTTFunction aSTTFunction) {
-            final ASTTFunction funcType = aSTTFunction;
-            final List<ASTType> paramTypes = funcType.getParamTypes();
-            
-            if (paramTypes.isEmpty()) {
-                throw new TypeError("Function application requires a function type, got " + funType.toStr());
+        return switch (funType) {
+            case ASTTFunction funcType -> {
+                var paramTypes = funcType.getParamTypes();
+                if (paramTypes.isEmpty()) {
+                    throw new TypeError("Function application requires a function type, got " + funType.toStr());
+                }
+                if (!Subtyping.isSubtype(argType, paramTypes.get(0), typeDefs)) {
+                    throw new TypeError("Argument type " + argType.toStr() +
+                                        " is not compatible with parameter type " + paramTypes.get(0).toStr());
+                }
+                if (paramTypes.size() == 1)
+                    yield funcType.getReturnType();
+                var remainingParams = paramTypes.subList(1, paramTypes.size());
+                yield new ASTTFunction(remainingParams, funcType.getReturnType());
             }
-            
-            if (!Subtyping.isSubtype(argType, paramTypes.get(0), typeDefs))
-                throw new TypeError("Argument type " + argType.toStr() + 
-                                " is not compatible with parameter type " + paramTypes.get(0).toStr());
-            
-            if (paramTypes.size() == 1)
-                return funcType.getReturnType();
-            else {
-                final List<ASTType> remainingParams = paramTypes.subList(1, paramTypes.size());
-                return new ASTTFunction(remainingParams, funcType.getReturnType());
+            case ASTTArrow arrowType -> {
+                if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs))
+                    throw new TypeError("Argument type " + argType.toStr() +
+                                        " is not compatible with parameter type " + arrowType.getDomain().toStr());
+                yield arrowType.getCodomain();
             }
-            
-        } else if (funType instanceof ASTTArrow aSTTArrow) {
-            final ASTTArrow arrowType = aSTTArrow;
-            
-            if (!Subtyping.isSubtype(argType, arrowType.getDomain(), typeDefs)) {
-                throw new TypeError("Argument type " + argType.toStr() + 
-                                " is not compatible with parameter type " + arrowType.getDomain().toStr());
-            }
-            
-            return arrowType.getCodomain();
-            
-        } else
-            throw new TypeError("Function application requires a function type, got " + funType.toStr());
+            default -> throw new TypeError("Function application requires a function type, got " + funType.toStr());
+        };
     }
 }

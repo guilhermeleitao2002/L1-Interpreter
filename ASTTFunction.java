@@ -21,27 +21,28 @@ public class ASTTFunction implements ASTType {
         return this.paramTypes.size();
     }
     
-    @Override
-    public String toStr() {
-        if (paramTypes.isEmpty()) {
-            return returnType.toStr();
-        }
-        
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < paramTypes.size(); i++) {
-            if (i > 0) sb.append(",");
-            sb.append(paramTypes.get(i).toStr());
-        }
-        sb.append(" -> ").append(returnType.toStr());
-        return sb.toString();
-    }
-    
-    // Convert to traditional curried arrow type for compatibility
+    // For compatibility with ASTTArrow
     public ASTType toCurriedType() {
         ASTType result = returnType;
-        for (int i = paramTypes.size() - 1; i >= 0; i--) {
+        for (int i = paramTypes.size() - 1; i >= 0; i--)
             result = new ASTTArrow(paramTypes.get(i), result);
-        }
+
         return result;
     }
+
+    @Override
+    public String toStr() {
+        if (paramTypes.isEmpty())
+            return returnType.toStr();
+        
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < paramTypes.size(); i++) {
+            if (i > 0)
+                sb.append(",");
+            sb.append(paramTypes.get(i).toStr());
+        }
+
+        sb.append(" -> ").append(returnType.toStr());
+        return sb.toString();
+    }    
 }

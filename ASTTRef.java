@@ -13,5 +13,4 @@ public class ASTTRef implements ASTType {
     public String toStr() {
         return "ref<" + this.type.toStr() + ">";
     }
-
 }

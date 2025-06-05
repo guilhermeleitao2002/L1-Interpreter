@@ -9,11 +9,10 @@ public class ASTStructLiteral implements ASTNode {
     
     @Override
     public IValue eval(Environment<IValue> e) throws InterpreterError {
-        Map<String, IValue> evaluatedFields = new HashMap<>();
+        final Map<String, IValue> evaluatedFields = new HashMap<>();
         
-        for (Map.Entry<String, ASTNode> entry : this.fields.entrySet()) {
+        for (Map.Entry<String, ASTNode> entry : this.fields.entrySet())
             evaluatedFields.put(entry.getKey(), entry.getValue().eval(e));
-        }
         
         return new VStruct(evaluatedFields);
     }
