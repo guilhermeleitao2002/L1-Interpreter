@@ -1,7 +1,11 @@
-type Btree = union { Nil: unit, Node: NodeT };
-type NodeT = struct { left: Btree, val: int, right: Btree };
-let leaf = Node({ left=Nil(()), val=42, right=Nil(()) });
-match leaf {
-  Nil(u) -> 0
-  | Node(n) -> n.val
-};;
+type Circle = { cx:int; cy:int; rad:int };
+type Rectangle = { h:int; w:int };
+type Blob = [ circle:Circle; rect:Rectangle ];
+let pi = 3142;
+let area = fn b:Blob => {
+  match b {
+    circle(c) -> let r = pi*c.rad; (r*r)/2
+    | rect(r) -> r.h * r.w
+  }};
+let r1 = rect({ h=10; v=20 });
+area (r1);;

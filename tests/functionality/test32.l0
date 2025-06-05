@@ -1,6 +1,6 @@
-type Btree = [ Nil: unit, Node: NodeT ];
-type NodeT = { left: Btree, val: int, right: Btree };
-let leaf = Node({ left=Nil(()), val=42, right=Nil(()) });
+type Btree = [ Nil: unit; Node: NodeT ];
+type NodeT = { left: Btree; val: int; right: Btree };
+let leaf = Node({ left=Nil(()); val=42; right=Nil(()) });
 match leaf {
   Nil(u) -> 0
   | Node(n) -> n.val

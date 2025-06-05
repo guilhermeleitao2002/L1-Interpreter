@@ -382,7 +382,7 @@ ASTNode Fact() :
       (
         n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
         (
-          <COMMA> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
+          <SEMIC> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
         )*
       )?
       <RBRA> { t = new ASTStructLiteral(structFields); }
@@ -452,7 +452,6 @@ ASTType TypeExpr():
   (
     <MATCH_ARROW> t2 = TypeExpr() 
     {
-      // Always create ASTTFunction for consistency
       t1 = new ASTTFunction(paramTypes, t2);
     }
   |
@@ -478,7 +477,7 @@ Map<String, ASTType> FieldTypeList():
     fieldName = <Id> <COLON> fieldType = TypeFactor() 
     { fields.put(fieldName.image, fieldType); }
     (
-      <COMMA> fieldName = <Id> <COLON> fieldType = TypeFactor()
+      <SEMIC> fieldName = <Id> <COLON> fieldType = TypeFactor()
       { fields.put(fieldName.image, fieldType); }
     )*
   )?

@@ -1,9 +1,9 @@
 let c = box(0);
 let counter = {
-    get=fn u:unit => { !c },
-    inc=fn u:unit => { c := !c + 1; () },
-    incBy=fn m:int => { c := !c + m; () },
-    decBy=fn m:int => { if (!c >= m) { c := !c - m } else {!c} },
+    get=fn u:unit => { !c };
+    inc=fn u:unit => { c := !c + 1; () };
+    incBy=fn m:int => { c := !c + m; () };
+    decBy=fn m:int => { if (!c >= m) { c := !c - m } else {!c} };
     reset=fn u:unit => { c := 0; () }
 };
 counter.inc (());
