@@ -40,6 +40,10 @@ TOKEN :
   |
   < RBRA : "}" >
   |
+  < LSBRA : "[" >
+  |
+  < RSBRA : "]" >
+  |
   < EQUAL : "=" >
   |
   < COLON : ":" >
@@ -103,10 +107,6 @@ TOKEN :
   < String: "\"" ( (~["\"","\\"]) | ("\\" ( ["n","t","b","r","f","\\","\""] ) ) )* "\"" >
   |
   < TYPE : "type" >
-  |
-  < STRUCT : "struct" >
-  |
-  < UNION : "union" >
   |
   < UNIT : "unit" >
   |
@@ -430,9 +430,9 @@ ASTType TypeFactor():
     |
     <LIST> <LT> elementType = TypeExpr() <GT> { t = new ASTTList(elementType); }
     |
-    <STRUCT> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
+    <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
     |
-    <UNION> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTUnion(fields); }
+    <LSBRA> fields = FieldTypeList() <RSBRA> { t = new ASTTUnion(fields); }
     |
     <LPAR> t = TypeExpr() <RPAR>
   )
