@@ -150,21 +150,21 @@ ASTNode Let() :
 }
 {
   (
-    // First we handle any type definitions
+    // Type definitions first
     (
       <TYPE> n=<Id> <EQUAL> typeExpr = TypeExpr() <SEMIC>
       { typeDefs.put(n.image, typeExpr); }
-    )*
-    
-    // Only after do we handle let bindings, or just a sequence...
+    )*    
+    // Let bindings
     (
       (<LET> n=<Id> 
         (
-          <COLON> typeExpr=TypeExpr() <EQUAL> e1=BA() { decls.add(new Bind(n.image, typeExpr, e1)); }
+          <COLON> typeExpr=TypeExpr() <EQUAL> e1 = BA() <SEMIC>
+          { decls.add(new Bind(n.image, typeExpr, e1)); }
           |
-          <EQUAL> e1=BA() { decls.add(new Bind(n.image, e1)); }
+          <EQUAL> e1 = BA() <SEMIC>
+          { decls.add(new Bind(n.image, e1)); }
         )
-        <SEMIC>
       )+
       e2 = Seq() 
       { 
@@ -359,9 +359,15 @@ ASTNode Fact() :
       )
       <RBRA>
     | <FN> n=<Id> { params.add(n.image); }
-      ( <COMMA> n = <Id> { params.add(n.image); } )*
-      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
-    | <LBRA> // Struct literal
+      (
+        LOOKAHEAD(2) <COLON> paramType=TypeExpr() { paramTypes.add(paramType); }
+        ( <COMMA> n = <Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); } )*
+        <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, paramTypes, e2); }
+        |
+        ( <COMMA> n = <Id> { params.add(n.image); } )*
+        <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
+      )
+    | <LBRA>
       (
         n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
         (
@@ -382,12 +388,30 @@ ASTNode Fact() :
 ASTType TypeExpr():
 {
   ASTType t1, t2;
+  List<ASTType> paramTypes = new ArrayList<ASTType>();
 }
 {
-  t1 = TypeFactor() 
+  t1 = TypeFactor() { paramTypes.add(t1); }
   (
-    LOOKAHEAD(1) <MATCH_ARROW> t2 = TypeExpr() { t1 = new ASTTArrow(t1, t2); }
-  )?
+    LOOKAHEAD(2) <COMMA> t2 = TypeFactor() { paramTypes.add(t2); }
+  )*
+  (
+    <MATCH_ARROW> t2 = TypeExpr() 
+    {
+      ASTType result = t2;
+      for (int i = paramTypes.size() - 1; i >= 0; i--) {
+        result = new ASTTArrow(paramTypes.get(i), result);
+      }
+      t1 = result;
+    }
+  |
+    {
+      if (paramTypes.size() > 1) {
+        throw new ParseException("Multiple types require -> for function type");
+      }
+      t1 = paramTypes.get(0);
+    }
+  )
   { return t1; }
 }
 

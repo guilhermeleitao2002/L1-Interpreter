@@ -37,7 +37,14 @@ public class ASTFun implements ASTNode {
                 List<String> currentParam = new ArrayList<>();
                 currentParam.add(this.params.get(i));
 
-                final ASTNode innerFun = new ASTFun(lastParam, currentBody);
+                final ASTNode innerFun;
+                if (!this.paramTypes.isEmpty() && i + 1 < this.paramTypes.size()) {
+                    List<ASTType> remainingTypes = this.paramTypes.subList(i + 1, this.paramTypes.size());
+                    innerFun = new ASTFun(lastParam, remainingTypes, currentBody);
+                } else {
+                    innerFun = new ASTFun(lastParam, currentBody);
+                }
+                
                 lastParam = currentParam;
                 currentBody = innerFun;
             }
@@ -95,7 +102,7 @@ public class ASTFun implements ASTNode {
         }
     }
 
-    private List<ASTType> extractParameterTypes(ASTType functionType) {
+    private List<ASTType> extractParameterTypes(ASTType functionType) throws TypeError {
         final List<ASTType> paramTypes = new ArrayList<>();
         ASTType current = functionType;
         
