@@ -6,7 +6,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Loop through functionality tests
-for test_num in {1..33}; do
+for test_num in {1..34}; do
     test_file="tests/functionality/test${test_num}.l0"
     expected_file="tests/functionality/output/test${test_num}.out"
 

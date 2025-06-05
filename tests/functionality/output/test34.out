@@ -1,0 +1,1 @@
+node({ val = 5, left = node({ val = 2, left = node({ val = 0, left = nul(()), right = nul(()) }), right = node({ val = 0, left = nul(()), right = nul(()) }) }), right = node({ val = 0, left = nul(()), right = nul(()) }) })
