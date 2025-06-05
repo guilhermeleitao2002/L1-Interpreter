@@ -158,8 +158,13 @@ ASTNode Let() :
     
     // Only after do we handle let bindings, or just a sequence...
     (
-      (<LET> n=<Id> <EQUAL> e1 = BA() <SEMIC>
-        { decls.add(new Bind(n.image, e1)); }
+      (<LET> n=<Id> 
+        (
+          <COLON> typeExpr=TypeExpr() <EQUAL> e1=BA() { decls.add(new Bind(n.image, typeExpr, e1)); }
+          |
+          <EQUAL> e1=BA() { decls.add(new Bind(n.image, e1)); }
+        )
+        <SEMIC>
       )+
       e2 = Seq() 
       { 
@@ -353,9 +358,9 @@ ASTNode Fact() :
         { t = new ASTCaseMatch(t, casesBranches); }
       )
       <RBRA>
-    | <FN> n=<Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); }
-      ( <COMMA> n = <Id> { params.add(n.image); } <COLON> paramType=TypeExpr() { paramTypes.add(paramType); } )*
-      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, paramTypes, e2); }
+    | <FN> n=<Id> { params.add(n.image); }
+      ( <COMMA> n = <Id> { params.add(n.image); } )*
+      <ARROW> <LBRA> e2 = Let() <RBRA> { t = new ASTFun(params, e2); }
     | <LBRA> // Struct literal
       (
         n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }

@@ -1,13 +1,8 @@
-let c = box(0);
-let counter = {
-get = fn u:unit => { !c },
-inc = fn u:unit => { c := !c + 1; () },
-incBy = fn m:int => { c := !c + m; () },
-decBy = fn m:int => { if (!c >= m) { c := !c - m } else {!c} },
-reset = fn u:unit => { c := 0; () }
+let factorial:int->int = fn n => {
+  if (n <= 1) {
+    1
+  } else {
+    n * factorial(n - 1)
+  }
 };
-counter.inc (());
-counter.incBy (2);
-println (counter.get (()));
-counter.reset (());
-counter.get (());;
+factorial(5);;

@@ -26,8 +26,30 @@ public class ASTLet implements ASTNode {
         final TypeEnvironment newGamma = gamma.beginScope();
         
         for (Bind decl : this.decls) {
-            final ASTType declType = decl.getExp().typecheck(newGamma, typeDefs);
-            newGamma.assoc(decl.getId(), declType);
+            if (decl.hasType()) {
+                final ASTType declaredType = decl.getType();
+                
+                // For functions, set expected type and add to environment first (enables recursion)
+                if (decl.getExp() instanceof ASTFun aSTFun) {
+                    final ASTFun fun = aSTFun;
+                    fun.setExpectedType(declaredType);
+                    newGamma.assoc(decl.getId(), declaredType);
+                }
+                
+                final ASTType exprType = decl.getExp().typecheck(newGamma, typeDefs);
+                
+                if (!Subtyping.isSubtype(exprType, declaredType, typeDefs)) {
+                    throw new TypeError("Expression type " + exprType.toStr() + 
+                                    " does not match declared type " + declaredType.toStr());
+                }
+                
+                if (!(decl.getExp() instanceof ASTFun)) {
+                    newGamma.assoc(decl.getId(), declaredType);
+                }
+            } else {
+                final ASTType declType = decl.getExp().typecheck(newGamma, typeDefs);
+                newGamma.assoc(decl.getId(), declType);
+            }
         }
         
         return this.body.typecheck(newGamma, typeDefs);
