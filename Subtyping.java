@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Subtyping {
+    private static Set<String> resolvingTypes = new HashSet<>();
     
     public static boolean isSubtype(ASTType subType, ASTType superType, TypeDefEnvironment typeDefs) throws TypeError {
         if (subType instanceof ASTTFunction aSTTFunction)
@@ -92,6 +93,9 @@ public class Subtyping {
     }
     
     private static boolean typeEquals(ASTType type1, ASTType type2, TypeDefEnvironment typeDefs) throws TypeError {
+        if (type1 instanceof ASTTId && type2 instanceof ASTTId)
+            return ((ASTTId) type1).getId().equals(((ASTTId) type2).getId());
+        
         final ASTType resolved1 = resolveType(type1, typeDefs);
         final ASTType resolved2 = resolveType(type2, typeDefs);
         
@@ -175,9 +179,22 @@ public class Subtyping {
     }
     
     private static ASTType resolveType(ASTType type, TypeDefEnvironment typeDefs) throws TypeError {
-        if (type instanceof ASTTId typeId)
-            return typeDefs.find(typeId.id);
+        if (type instanceof ASTTId typeId) {
+            final String id = typeId.id;
+            
+            // For recursive types
+            if (resolvingTypes.contains(id))
+                return type;
+            
+            resolvingTypes.add(id);
 
+            try {
+                final ASTType resolved = typeDefs.find(id);
+                return resolved;
+            } finally {
+                resolvingTypes.remove(id);
+            }
+        }
         return type;
     }
 }
