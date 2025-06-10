@@ -27,9 +27,12 @@ public class ASTLet implements ASTNode {
         
         for (Bind decl : this.decls) {
             if (decl.hasType()) {
-                final ASTType declaredType = decl.getType();
+                ASTType declaredType = decl.getType();
                 
-                // For functions, set expected type and add to environment first - for recursion!
+                // Resolve type aliases in declared type
+                if (declaredType instanceof ASTTId typeId)
+                    declaredType = typeDefs.find(typeId.getId());
+                
                 if (decl.getExp() instanceof ASTFun aSTFun) {
                     final ASTFun fun = aSTFun;
                     fun.setExpectedType(declaredType);

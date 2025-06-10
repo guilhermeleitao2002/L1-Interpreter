@@ -21,13 +21,21 @@ public class ASTAssign implements ASTNode {
     
     @Override
     public ASTType typecheck(TypeEnvironment gamma, TypeDefEnvironment typeDefs) throws TypeError {
-        final ASTType lhsType = this.lhs.typecheck(gamma, typeDefs);
-        final ASTType rhsType = this.rhs.typecheck(gamma, typeDefs);
+        ASTType lhsType = this.lhs.typecheck(gamma, typeDefs);
+        ASTType rhsType = this.rhs.typecheck(gamma, typeDefs);
+        
+        // Resolve type aliases
+        if (lhsType instanceof ASTTId typeId)
+            lhsType = typeDefs.find(typeId.getId());
+        if (rhsType instanceof ASTTId typeId)
+            rhsType = typeDefs.find(typeId.getId());
         
         if (!(lhsType instanceof ASTTRef) && lhsType != null)
             throw new TypeError("Left side of assignment must be a reference type, got " + lhsType.toStr());
         
-        final ASTType refContentType = ((ASTTRef) lhsType).getType();
+        ASTType refContentType = ((ASTTRef) lhsType).getType();
+        if (refContentType instanceof ASTTId typeId)
+            refContentType = typeDefs.find(typeId.getId());
         
         if (!Subtyping.isSubtype(rhsType, refContentType, typeDefs))
             throw new TypeError("Cannot assign " + rhsType.toStr() + 
