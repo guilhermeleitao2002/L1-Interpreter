@@ -2,7 +2,7 @@ type Btree = [
   nul:unit;
   Node:{ left:Btree; val:int; right:Btree }
 ];
-let countNodes = fn t:Btree => {
+let countNodes:Btree->int = fn t:Btree => {
   match t {
     nul(p) -> 0
     | Node(p) -> 1 + (countNodes (p.left)) + (countNodes (p.right))
