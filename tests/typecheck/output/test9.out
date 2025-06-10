@@ -1,2 +1,1 @@
-Type Error:
 TypeError: == requires matching int or bool operands, got int and bool

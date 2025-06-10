@@ -1,2 +1,1 @@
-Type Error:
 TypeError: if condition must be bool, got int

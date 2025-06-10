@@ -1,2 +1,1 @@
-Type Error:
 TypeError: + operator requires int or string operands, got bool and int

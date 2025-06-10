@@ -20,17 +20,8 @@ public class L0int {
 				@SuppressWarnings("Convert2Diamond")
 				IValue v = exp.eval(new Environment<IValue>());
 				System.out.println(v.toStr());
-			} catch (ParseException e) {
-				System.out.println("Syntax Error:\n" + e);
-				Parser.ReInit(System.in);
-			} catch (TypeError e) {
-				System.out.println("Type Error:\n" + e);
-				Parser.ReInit(System.in);
-			} catch (InterpreterError e) {
-				System.out.println("Runtime Error:\n" + e);
-				Parser.ReInit(System.in);
-			} catch (Exception e) {
-				System.out.println("Error: " + e);
+			} catch (InterpreterError | ParseException | TypeError e) {
+				System.out.println(e);
 				Parser.ReInit(System.in);
 			}
 		}

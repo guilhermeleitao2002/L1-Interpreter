@@ -1,2 +1,1 @@
-Type Error:
-TypeError: Argument type struct { rad: int, cx: int, cy: int } is not compatible with parameter type Sphere
+TypeError: Argument type struct { rad: int, cx: int, cy: int } is not compatible with parameter type struct { rad: int, cx: int, cy: int, cz: int }

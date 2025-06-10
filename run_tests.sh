@@ -64,10 +64,10 @@ for test_num in {1..8}; do
     
     expected=$(cat "$expected_file")
     
-    # Compare only first 3 lines of both outputs
-    trimmed_output_first_3=$(echo "$trimmed_output" | head -n 3)
-    expected_first_3=$(echo "$expected" | head -n 3)
-    if [[ "$trimmed_output_first_3" == "$expected_first_3" ]]; then
+    # Compare only first 2 lines of both outputs
+    trimmed_output_first_2=$(echo "$trimmed_output" | head -n 2)
+    expected_first_2=$(echo "$expected" | head -n 2)
+    if [[ "$trimmed_output_first_2" == "$expected_first_2" ]]; then
         echo -e "${GREEN}[+] Syntactic Test $test_num passed successfully!${NC}"
     else
         echo -e "${RED}[-] Syntactic Test $test_num failed!${NC}"
@@ -102,10 +102,10 @@ for test_num in {1..11}; do
     
     expected=$(cat "$expected_file")
     
-    # Compare only first 3 lines of both outputs
-    trimmed_output_first_3=$(echo "$trimmed_output" | head -n 3)
-    expected_first_3=$(echo "$expected" | head -n 3)
-    if [[ "$trimmed_output_first_3" == "$expected_first_3" ]]; then
+    # Compare only first 2 lines of both outputs
+    trimmed_output_first_2=$(echo "$trimmed_output" | head -n 2)
+    expected_first_2=$(echo "$expected" | head -n 2)
+    if [[ "$trimmed_output_first_2" == "$expected_first_2" ]]; then
         echo -e "${GREEN}[+] Typecheck Test $test_num passed successfully!${NC}"
     else
         echo -e "${RED}[-] Typecheck Test $test_num failed!${NC}"
