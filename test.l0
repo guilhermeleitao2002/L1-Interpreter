@@ -1,22 +1,4 @@
-type NODE = {
-        val:int;
-        next:LIST
-};
-type LIST = [
-        nul: unit;
-        cons: NODE
-];
-let l0:LIST = nul (()) ;
-let l1:LIST = cons ( { val=2; next=l0}) ;
-let l2:LIST = cons ( { val=3; next=l1}) ;
-let plist:LIST->unit = fn
-    l:LIST => { 
-        match l {
-            nul(n) -> println (-1000); ()
-        |   cons(n) -> 
-                print (n.val);
-                plist (n.next)
-        }
-    }
-;
-plist (l2);;
+let k = -1;
+let om: (int -> int)->int = fn f:(int->int) => { f (k)};
+om (fn k:int => {k*k})
+;;

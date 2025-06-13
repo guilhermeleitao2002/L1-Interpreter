@@ -1,8 +1,8 @@
-type Btree = [
-  nul:unit;
-  node:{ left:Btree; val:int; right:Btree }
-];
-let t1 = node({ left=nul(()); val=0; right=nul(())});
-let t2 = node({ left=t1; val=2; right=t1});
-let t3 = node({ left=t2; val=5; right=t1});
+type Btree = union {
+  #nul:unit,
+  #node:struct { #left:Btree, #val:int, #right:Btree }
+};
+let t1 = #node({ #left=#nul(()), #val=0, #right=#nul(())});
+let t2 = #node({ #left=t1, #val=2, #right=t1});
+let t3 = #node({ #left=t2, #val=5, #right=t1});
 t3;;

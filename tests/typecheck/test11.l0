@@ -1,10 +1,10 @@
-type Circle = { cx:int; cy:int; rad:int };
-type Sphere = { cx:int; cy:int; rad:int; cz:int };
+type Circle = struct { #cx:int, #cy:int, #rad:int };
+type Sphere = struct { #cx:int, #cy:int, #rad:int, #cz:int };
 let calcArea:Sphere -> int = fn c => {
   let pi = 3;
-  let area = pi * c.rad * c.rad;
+  let area = pi * c.#rad * c.#rad;
   area
 };
-let circle = { cx=0; cy=0; rad=5 };
+let circle = { #cx=0, #cy=0, #rad=5 };
 let area = calcArea(circle);
 area;;

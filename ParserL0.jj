@@ -52,6 +52,12 @@ TOKEN :
   |
   < TERM : ";;" >
   |
+  < UNION : "union" >
+  |
+  < STRUCT : "struct" >
+  |
+  < HASH : "#" >
+  |
   < COMMA : "," >
   |
   < AND : "&&" >
@@ -160,7 +166,15 @@ ASTNode Let() :
       (<LET> n=<Id> 
         (
           <COLON> typeExpr=TypeExpr() <EQUAL> e1 = BA() <SEMIC>
-          { decls.add(new Bind(n.image, typeExpr, e1)); }
+          { 
+            // For function types, verify that e1 is a function with matching type
+            if (typeExpr instanceof ASTTArrow || typeExpr instanceof ASTTFunction) {
+              if (!(e1 instanceof ASTFun)) {
+                throw new ParseException("Expected function expression for function type");
+              }
+            }
+            decls.add(new Bind(n.image, typeExpr, e1)); 
+          }
           |
           <EQUAL> e1 = BA() <SEMIC>
           { decls.add(new Bind(n.image, e1)); }
@@ -378,11 +392,15 @@ ASTNode Fact() :
         <ARROW> <LBRA> e2 = Let() <RBRA> 
         { t = new ASTFun(params, e2); }
       )
+    | <HASH> n=<Id> 
+      (
+        <LPAR> e1=BA() <RPAR> { t = new ASTVariant(n.image, e1); }
+      )
     | <LBRA>
       (
-        n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
+        <HASH> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
         (
-          <SEMIC> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
+          <COMMA> <HASH> n=<Id> <EQUAL> e1=BA() { structFields.put(n.image, e1); }
         )*
       )?
       <RBRA> { t = new ASTStructLiteral(structFields); }
@@ -391,7 +409,7 @@ ASTNode Fact() :
     | LOOKAHEAD(1) <LPAR> t=Let() <RPAR>
   )
   (
-    LOOKAHEAD(2) <DOT> n=<Id> { t = new ASTFieldAccess(t, n.image); }
+    LOOKAHEAD(2) <DOT> <HASH> n=<Id> { t = new ASTFieldAccess(t, n.image); }
   )*
   { return t; }
 }
@@ -430,9 +448,9 @@ ASTType TypeFactor():
     |
     <LIST> <LT> elementType = TypeExpr() <GT> { t = new ASTTList(elementType); }
     |
-    <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
+    <STRUCT> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTStruct(fields); }
     |
-    <LSBRA> fields = FieldTypeList() <RSBRA> { t = new ASTTUnion(fields); }
+    <UNION> <LBRA> fields = FieldTypeList() <RBRA> { t = new ASTTUnion(fields); }
     |
     <LPAR> t = TypeExpr() <RPAR>
   )
@@ -474,10 +492,10 @@ Map<String, ASTType> FieldTypeList():
 }
 {
   (
-    fieldName = <Id> <COLON> fieldType = TypeFactor() 
+    <HASH> fieldName = <Id> <COLON> fieldType = TypeFactor() 
     { fields.put(fieldName.image, fieldType); }
     (
-      <SEMIC> fieldName = <Id> <COLON> fieldType = TypeFactor()
+      <COMMA> <HASH> fieldName = <Id> <COLON> fieldType = TypeFactor()
       { fields.put(fieldName.image, fieldType); }
     )*
   )?
