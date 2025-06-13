@@ -506,10 +506,10 @@ Map<String, ASTType> FieldTypeList():
 }
 {
   (
-    <HASH> fieldName = <Id> <COLON> fieldType = TypeFactor() 
+    <HASH> fieldName = <Id> <COLON> fieldType = TypeExpr() 
     { fields.put(fieldName.image, fieldType); }
     (
-      <COMMA> <HASH> fieldName = <Id> <COLON> fieldType = TypeFactor()
+      <COMMA> <HASH> fieldName = <Id> <COLON> fieldType = TypeExpr()
       { fields.put(fieldName.image, fieldType); }
     )*
   )?
