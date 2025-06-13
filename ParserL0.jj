@@ -362,10 +362,10 @@ ASTNode Fact() :
         <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() 
         { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
         |
-        n=<Id> { String firstCase = n.image; } <LPAR> n=<Id> { String firstVar = n.image; } <RPAR> <MATCH_ARROW> e1=Let() 
+        <HASH> n=<Id> { String firstCase = n.image; } <LPAR> n=<Id> { String firstVar = n.image; } <RPAR> <MATCH_ARROW> e1=Let() 
         { casesBranches.put(firstCase, new ASTCaseBranch(firstVar, e1)); }
         (
-          <VBAR> n=<Id> { String caseName = n.image; } <LPAR> n=<Id> { String caseVar = n.image; } <RPAR> <MATCH_ARROW> e2=Let()
+          <VBAR> <HASH> n=<Id> { String caseName = n.image; } <LPAR> n=<Id> { String caseVar = n.image; } <RPAR> <MATCH_ARROW> e2=Let()
           { casesBranches.put(caseName, new ASTCaseBranch(caseVar, e2)); }
         )*
         { t = new ASTCaseMatch(t, casesBranches); }
