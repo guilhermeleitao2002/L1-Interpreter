@@ -377,7 +377,7 @@ ASTNode Fact() :
         LOOKAHEAD(3) 
         { String paramName; }
         ( n=<Id> { paramName = n.image; } | <UNDERSCORE> { paramName = "_"; } ) 
-        <COLON> paramType=TypeExpr() 
+        <COLON> paramType=BasicTypeExpr() 
         { 
           params.add(paramName); 
           paramTypes.add(paramType); 
@@ -385,7 +385,7 @@ ASTNode Fact() :
         ( <COMMA> 
           { String nextParamName; }
           ( n=<Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
-          <COLON> paramType=TypeExpr() 
+          <COLON> paramType=BasicTypeExpr() 
           { 
             params.add(nextParamName); 
             paramTypes.add(paramType); 
@@ -494,6 +494,21 @@ ASTType TypeExpr():
       }
     }
   )
+  { return t1; }
+}
+
+ASTType BasicTypeExpr():
+{
+  ASTType t1, t2;
+}
+{
+  t1 = TypeFactor()
+  (
+    <MATCH_ARROW> t2 = BasicTypeExpr()
+    {
+      t1 = new ASTTArrow(t1, t2);
+    }
+  )?
   { return t1; }
 }
 
