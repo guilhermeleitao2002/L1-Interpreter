@@ -1,10 +1,10 @@
 type MoreCircle = struct { #cx:int, #cy:int, #rad:int, #color:string };
 type Circle = struct { #cx:int, #cy:int, #rad:int };
 type Rectangle = struct { #h:int, #w:int };
-let area = fn c:MoreCircle => {
+let area = fn c:Circle => {
   let pi = 3;
-  println("(" + c.#cx + ", " + c.#cy + ") -> " + c.#color);
+  println("(" + c.#cx + ", " + c.#cy + ")");
   c.#rad * c.#rad * pi
 };
-let c1 = { #cx=10, #cy=20, #rad=5 };
+let c1 = { #cx=10, #cy=20, #rad=5, #color="red" };
 area(c1);;
