@@ -1,4 +1,4 @@
-type Option = union { #Some:int, #None:unit };
+type Option = union { #Some:int, #None:() };
 let maybe:Option = #Some(10);
 let nothing:Option = #None(());
 match maybe {

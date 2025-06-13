@@ -1,4 +1,4 @@
-type Btree = union { #Nil:unit, #Node:NodeT};
+type Btree = union { #Nil:(), #Node:NodeT};
 type NodeT = struct { #left:Btree, #val:int, #right:Btree };
 let leaf:Btree = #Node({ #left=#Nil(()), #val=42, #right=#Nil(()) });
 match leaf {

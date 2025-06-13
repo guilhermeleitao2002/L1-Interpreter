@@ -1,4 +1,6 @@
-let k = -1;
-let om: (int -> int)->int = fn f:(int->int) => { f (k)};
-om (fn k:int => {k*k})
-;;
+type Opt = union { #none:(), #some:int};
+let l0:Opt = #none(());
+match l0 {
+    #none(_) -> 1
+|   #some(i) -> i    
+};;

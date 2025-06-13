@@ -40,10 +40,6 @@ TOKEN :
   |
   < RBRA : "}" >
   |
-  < LSBRA : "[" >
-  |
-  < RSBRA : "]" >
-  |
   < EQUAL : "=" >
   |
   < COLON : ":" >
@@ -116,7 +112,7 @@ TOKEN :
   |
   < TYPE : "type" >
   |
-  < UNIT : "unit" >
+  < UNIT : "()" >
   |
   < STRING : "string" >
   |
@@ -350,7 +346,7 @@ ASTNode Fact() :
           { t = new ASTId(n.image); }
         )
     | n=<String> { t = new ASTString(n.image); }
-    | LOOKAHEAD(2) <LPAR> <RPAR> { t = new ASTUnit(); }
+    | LOOKAHEAD(2) <UNIT> { t = new ASTUnit(); }
     | <BOX> t=Fact() { t = new ASTBox(t); }
     | <DREF> t=Fact() { t = new ASTDeref(t); }
     | <MINUS> t=Fact() { t = new ASTNeg(t); }

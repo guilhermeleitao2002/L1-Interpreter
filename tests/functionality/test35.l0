@@ -1,5 +1,5 @@
 type Btree = union {
-  #nul:unit,
+  #nul:(),
   #Node:struct { #left:Btree, #val:int, #right:Btree }
 };
 let countNodes:Btree->int = fn t:Btree => {

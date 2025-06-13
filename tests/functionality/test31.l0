@@ -1,10 +1,10 @@
 let c:ref<int> = box(0);
 let counter = {
-    #get=fn u:unit => { !c },
-    #inc=fn u:unit => { c := !c + 1; () },
+    #get=fn u:() => { !c },
+    #inc=fn u:() => { c := !c + 1; () },
     #incBy=fn m:int => { c := !c + m; () },
     #decBy=fn m:int => { if (!c >= m) { c := !c - m } else {!c} },
-    #reset=fn u:unit => { c := 0; () }
+    #reset=fn u:() => { c := 0; () }
 };
 counter.#inc (());
 counter.#incBy (2);
