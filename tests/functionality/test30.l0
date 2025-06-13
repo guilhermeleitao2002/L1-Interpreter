@@ -1,4 +1,4 @@
-let applyTwice = fn f:(int -> int) => { fn x:int => {
+let applyTwice = fn f:int -> int => { fn x:int => {
   f(f(x))
 }};
 let inc = fn x:int => { x + 1 };

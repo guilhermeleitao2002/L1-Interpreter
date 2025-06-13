@@ -165,7 +165,6 @@ ASTNode Let() :
         (
           <COLON> typeExpr=TypeExpr() <EQUAL> e1 = BA() <SEMIC>
           { 
-            // For function types, verify that e1 is a function with matching type
             if (typeExpr instanceof ASTTArrow || typeExpr instanceof ASTTFunction) {
               if (!(e1 instanceof ASTFun)) {
                 throw new ParseException("Expected function expression for function type");
@@ -378,15 +377,15 @@ ASTNode Fact() :
         LOOKAHEAD(3) 
         { String paramName; }
         ( n=<Id> { paramName = n.image; } | <UNDERSCORE> { paramName = "_"; } ) 
-        <COLON> paramType=TypeFactor() 
+        <COLON> paramType=TypeExpr() 
         { 
           params.add(paramName); 
           paramTypes.add(paramType); 
         }
         ( <COMMA> 
           { String nextParamName; }
-          ( n = <Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
-          <COLON> paramType=ParamType() 
+          ( n=<Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
+          <COLON> paramType=TypeExpr() 
           { 
             params.add(nextParamName); 
             paramTypes.add(paramType); 
@@ -488,7 +487,7 @@ ASTType TypeExpr():
     }
   |
     {
-      if (paramTypes.size() == 1) {
+      if (paramTypes.size() >= 1) {
         t1 = paramTypes.get(0);
       } else {
         throw new ParseException("Function type with parameters requires -> returnType");
@@ -514,13 +513,4 @@ Map<String, ASTType> FieldTypeList():
     )*
   )?
   { return fields; }
-}
-
-ASTType ParamType():
-{
-  ASTType t;
-}
-{
-  t = TypeFactor()
-  { return t; }
 }
