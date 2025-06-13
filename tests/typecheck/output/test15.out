@@ -1,0 +1,1 @@
+TypeError: Expression type struct { name: int } does not match declared type struct { name: int, age: int }
