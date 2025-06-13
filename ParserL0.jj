@@ -377,7 +377,7 @@ ASTNode Fact() :
         LOOKAHEAD(3) 
         { String paramName; }
         ( n=<Id> { paramName = n.image; } | <UNDERSCORE> { paramName = "_"; } ) 
-        <COLON> paramType=BasicTypeExpr() 
+        <COLON> paramType=TypeExpr() 
         { 
           params.add(paramName); 
           paramTypes.add(paramType); 
@@ -385,10 +385,10 @@ ASTNode Fact() :
         ( <COMMA> 
           { String nextParamName; }
           ( n=<Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
-          <COLON> paramType=BasicTypeExpr() 
+          <COLON> paramType=TypeExpr() 
           { 
             params.add(nextParamName); 
-            paramTypes.add(paramType); 
+            paramTypes.add(paramType);
           } 
         )*
         <ARROW> <LBRA> e2 = Let() <RBRA> 
@@ -473,38 +473,11 @@ ASTType TypeFactor():
 ASTType TypeExpr():
 {
   ASTType t1, t2;
-  List<ASTType> paramTypes = new ArrayList<ASTType>();
-}
-{
-  t1 = TypeFactor() { paramTypes.add(t1); }
-  (LOOKAHEAD(2)
-    <COMMA> t2 = TypeFactor() { paramTypes.add(t2); }
-  )*
-  (
-    <MATCH_ARROW> t2 = TypeExpr() 
-    {
-      t1 = new ASTTFunction(paramTypes, t2);
-    }
-  |
-    {
-      if (paramTypes.size() >= 1) {
-        t1 = paramTypes.get(0);
-      } else {
-        throw new ParseException("Function type with parameters requires -> returnType");
-      }
-    }
-  )
-  { return t1; }
-}
-
-ASTType BasicTypeExpr():
-{
-  ASTType t1, t2;
 }
 {
   t1 = TypeFactor()
   (
-    <MATCH_ARROW> t2 = BasicTypeExpr()
+    <MATCH_ARROW> t2 = TypeExpr()
     {
       t1 = new ASTTArrow(t1, t2);
     }
