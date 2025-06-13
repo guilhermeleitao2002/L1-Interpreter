@@ -27,7 +27,8 @@ public class ASTApp implements ASTNode {
 
         final Environment<IValue> funEnv = closure.getEnv().beginScope();
         
-        funEnv.assoc(param, argValue);
+        if (!param.equals("_"))
+            funEnv.assoc(param, argValue);
         
         return closure.getBody().eval(funEnv);
     }

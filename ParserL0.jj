@@ -375,22 +375,34 @@ ASTNode Fact() :
       <RBRA>
     | <FN> 
       (
-        LOOKAHEAD(3) n=<Id> <COLON> paramType=TypeFactor() 
+        LOOKAHEAD(3) 
+        { String paramName; }
+        ( n=<Id> { paramName = n.image; } | <UNDERSCORE> { paramName = "_"; } ) 
+        <COLON> paramType=TypeFactor() 
         { 
-          params.add(n.image); 
+          params.add(paramName); 
           paramTypes.add(paramType); 
         }
-        ( <COMMA> n = <Id> <COLON> paramType=ParamType() 
+        ( <COMMA> 
+          { String nextParamName; }
+          ( n = <Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
+          <COLON> paramType=ParamType() 
           { 
-            params.add(n.image); 
+            params.add(nextParamName); 
             paramTypes.add(paramType); 
           } 
         )*
         <ARROW> <LBRA> e2 = Let() <RBRA> 
         { t = new ASTFun(params, paramTypes, e2); }
         |
-        n=<Id> { params.add(n.image); }
-        ( <COMMA> n = <Id> { params.add(n.image); } )*
+        { String paramName; }
+        ( n=<Id> { paramName = n.image; } | <UNDERSCORE> { paramName = "_"; } )
+        { params.add(paramName); }
+        ( <COMMA> 
+          { String nextParamName; }
+          ( n = <Id> { nextParamName = n.image; } | <UNDERSCORE> { nextParamName = "_"; } ) 
+          { params.add(nextParamName); } 
+        )*
         <ARROW> <LBRA> e2 = Let() <RBRA> 
         { t = new ASTFun(params, e2); }
       )

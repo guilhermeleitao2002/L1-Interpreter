@@ -94,7 +94,8 @@ public class ASTFun implements ASTNode {
                 if (paramType instanceof ASTTId typeId)
                     paramType = typeDefs.find(typeId.getId());
 
-                newGamma.assoc(this.params.get(i), paramType);
+                if (!this.params.get(i).equals("_"))
+                    newGamma.assoc(this.params.get(i), paramType);
             }
             
             final ASTType bodyType = this.body.typecheck(newGamma, typeDefs);
@@ -112,7 +113,8 @@ public class ASTFun implements ASTNode {
                 if (paramType instanceof ASTTId typeId)
                     paramType = typeDefs.find(typeId.getId());
 
-                newGamma.assoc(this.params.get(i), paramType);
+                if (!this.params.get(i).equals("_"))
+                    newGamma.assoc(this.params.get(i), paramType);
             }
             
             final ASTType bodyType = this.body.typecheck(newGamma, typeDefs);
