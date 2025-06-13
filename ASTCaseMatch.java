@@ -23,7 +23,8 @@ public class ASTCaseMatch implements ASTNode {
             throw new InterpreterError("No case for variant " + variant.getLabel());
         
         final Environment<IValue> newEnv = e.beginScope();
-        newEnv.assoc(branch.getVariable(), variant.getValue());
+        if (!branch.getVariable().equals("_"))
+            newEnv.assoc(branch.getVariable(), variant.getValue());
         
         return branch.getBody().eval(newEnv);
     }
@@ -53,7 +54,8 @@ public class ASTCaseMatch implements ASTNode {
             
             final ASTType variantType = variants.get(caseName);
             final TypeEnvironment newGamma = gamma.beginScope();
-            newGamma.assoc(branch.getVariable(), variantType);
+            if (!branch.getVariable().equals("_"))
+                newGamma.assoc(branch.getVariable(), variantType);
             
             final ASTType branchType = branch.getBody().typecheck(newGamma, typeDefs);
             
