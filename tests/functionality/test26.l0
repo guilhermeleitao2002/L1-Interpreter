@@ -1,7 +1,7 @@
-type Option = union { #some:int, #none:unit };
-let maybe = #some(10);
-let nothing = #none(());
+type Option = union { #Some:int, #None:unit };
+let maybe:Option = #Some(10);
+let nothing:Option = #None(());
 match maybe {
-  #some(x) -> x + 1
-  | #none(u) -> 0
+  #Some(x) -> x + 1
+  | #None(u) -> 0
 };;

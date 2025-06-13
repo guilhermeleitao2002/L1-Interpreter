@@ -1,6 +1,7 @@
-type Result = union { #ok:int, #err:string };
-let success = #ok(42);
+type Result = union { #Ok:int, #Err:string };
+let success:Result = #Ok(42);
+let errorMsg:Result = #Err("An error occurred");
 match success {
-  #ok(x) -> x * 2
-  | #err(msg) -> 0
+  #Ok(x) -> x * 2
+  | #Err(msg) -> println(msg); 0
 };;
