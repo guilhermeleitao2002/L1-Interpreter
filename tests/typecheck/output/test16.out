@@ -1,0 +1,1 @@
+TypeError: Expression type union { rect: struct { v: int, h: int } } does not match declared type union { rect: Rectangle, circle: Circle }
