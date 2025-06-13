@@ -359,12 +359,16 @@ ASTNode Fact() :
         <NIL> <MATCH_ARROW> e1=Let() <VBAR> n=<Id> { headVar = n.image; } <DCOLON> n=<Id> { tailVar = n.image; } <MATCH_ARROW> e2=Let() 
         { t = new ASTMatch(t, e1, headVar, tailVar, e2); }
         |
-        <HASH> n=<Id> { String firstCase = n.image; String firstVar; } <LPAR> 
+        {String firstCase; String firstVar;}
+        <HASH> 
+        ( n=<Id> { firstCase = n.image; } | n=<NIL> { firstCase = n.image; } ) <LPAR> 
           ( n=<Id> { firstVar = n.image; } | <UNDERSCORE> { firstVar = "_"; } ) 
         <RPAR> <MATCH_ARROW> e1=Let() 
         { casesBranches.put(firstCase, new ASTCaseBranch(firstVar, e1)); }
         (
-          <VBAR> <HASH> n=<Id> { String caseName = n.image; String caseVar; } <LPAR> 
+          {String caseName; String caseVar;}
+          <VBAR> <HASH> 
+          ( n=<Id> { caseName = n.image; } | n=<NIL> { caseName = n.image; } ) <LPAR> 
             ( n=<Id> { caseVar = n.image; } | <UNDERSCORE> { caseVar = "_"; } ) 
           <RPAR> <MATCH_ARROW> e2=Let()
           { casesBranches.put(caseName, new ASTCaseBranch(caseVar, e2)); }
@@ -405,7 +409,8 @@ ASTNode Fact() :
         <ARROW> <LBRA> e2 = Let() <RBRA> 
         { t = new ASTFun(params, e2); }
       )
-    | <HASH> n=<Id> 
+    | <HASH> 
+      ( n=<Id> | n=<NIL> )  // For teacher examples
       (
         <LPAR> e1=BA() <RPAR> { t = new ASTVariant(n.image, e1); }
       )
@@ -493,10 +498,14 @@ Map<String, ASTType> FieldTypeList():
 }
 {
   (
-    <HASH> fieldName = <Id> <COLON> fieldType = TypeExpr() 
+    <HASH> 
+    ( fieldName = <Id> | fieldName = <NIL> )  // accept nil too for teacher examples
+    <COLON> fieldType = TypeExpr() 
     { fields.put(fieldName.image, fieldType); }
     (
-      <COMMA> <HASH> fieldName = <Id> <COLON> fieldType = TypeExpr()
+      <COMMA> <HASH> 
+      ( fieldName = <Id> | fieldName = <NIL> )
+      <COLON> fieldType = TypeExpr()
       { fields.put(fieldName.image, fieldType); }
     )*
   )?
