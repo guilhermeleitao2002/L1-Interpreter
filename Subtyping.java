@@ -11,9 +11,8 @@ public class Subtyping {
             superType = aSTTFunction.toCurriedType();
 
         // A <: A
-        if (typeEquals(subType, superType, typeDefs)) {
+        if (typeEquals(subType, superType, typeDefs))
             return true;
-        }
         
         // Resolve type ids
         final ASTType resolvedSub = resolveType(subType, typeDefs);
