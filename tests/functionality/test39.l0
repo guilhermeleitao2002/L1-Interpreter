@@ -1,0 +1,12 @@
+type Node = struct { 
+  #value: int, 
+  #next: union { #none:(), #some:Node } 
+};
+
+let n1:Node = { #value=1, #next=#none(()) };
+let n2:Node = { #value=2, #next=#some(n1) };
+
+match n2.#next {
+  #none(_) -> 0
+  | #some(node) -> node.#value
+};;

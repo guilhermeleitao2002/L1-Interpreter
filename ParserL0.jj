@@ -98,7 +98,7 @@ TOKEN :
   |
   < DCOLON : "::" >
   |
-  < LCONS : "?:" >
+  < LCONS : ":?" >
   |
   < DREF : "!" >
   |

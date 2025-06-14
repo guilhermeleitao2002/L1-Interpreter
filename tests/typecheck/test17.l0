@@ -1,0 +1,13 @@
+type Node = struct { 
+  #value: int, 
+  #next: ref<union { #none:(), #some:Node }> 
+};
+
+let n1:Node = { #value=1, #next=box(#none(())) };
+let n2:Node = { #value=2, #next=box(#some(n1)) };
+n1.#next := #some(n2);
+
+match !(n2.#next) {
+  #none(_) -> 0
+  | #some(node) -> node.#value
+};;
