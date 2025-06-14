@@ -1,0 +1,12 @@
+type Point2D = struct { #x: int, #y: int };
+type Point3D = struct { #x: int, #y: int, #z: int };
+
+let process2DList:list<Point2D>->int = fn lst:list<Point2D> => {
+  match lst {
+    nil -> 0
+    | h::t -> h.#x + h.#y
+  }
+};
+
+let points3D:list<Point3D> = { #x=1, #y=2, #z=3 } :: nil;
+points3D;;

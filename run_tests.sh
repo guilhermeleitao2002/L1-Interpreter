@@ -80,7 +80,7 @@ for test_num in {1..8}; do
 done
 
 # Do the same for static typechecking tests
-for test_num in {1..17}; do
+for test_num in {1..18}; do
     test_file="tests/typecheck/test${test_num}.l0"
     expected_file="tests/typecheck/output/test${test_num}.out"
 
