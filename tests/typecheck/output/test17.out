@@ -1,1 +1,1 @@
-TypeError: Expression type struct { next: ref<union { none: () }>, value: int } does not match declared type struct { next: ref<union { some: Node, none: () }>, value: int }
+TypeError: Cannot assign struct { name: string, breed: string } to reference of type struct { name: string }

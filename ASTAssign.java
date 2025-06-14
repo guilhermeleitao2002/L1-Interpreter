@@ -37,7 +37,8 @@ public class ASTAssign implements ASTNode {
         if (refContentType instanceof ASTTId typeId)
             refContentType = typeDefs.find(typeId.getId());
         
-        if (!Subtyping.isSubtype(rhsType, refContentType, typeDefs))
+        if (!Subtyping.isSubtype(rhsType, refContentType, typeDefs) ||
+            !Subtyping.isSubtype(refContentType, rhsType, typeDefs))
             throw new TypeError("Cannot assign " + rhsType.toStr() + 
                               " to reference of type " + refContentType.toStr());
         

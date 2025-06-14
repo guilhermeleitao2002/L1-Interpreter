@@ -1,13 +1,7 @@
-type Node = struct { 
-  #value: int, 
-  #next: ref<union { #none:(), #some:Node }> 
-};
+type Animal = struct { #name: string };
+type Dog = struct { #name: string, #breed: string };
 
-let n1:Node = { #value=1, #next=box(#none(())) };
-let n2:Node = { #value=2, #next=box(#some(n1)) };
-n1.#next := #some(n2);
+let animalRef: ref<Animal> = box({ #name="Generic" });
+let dogRef: ref<Dog> = box({ #name="Buddy", #breed="Golden" });
 
-match !(n2.#next) {
-  #none(_) -> 0
-  | #some(node) -> node.#value
-};;
+animalRef := !dogRef;;
