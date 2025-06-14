@@ -30,7 +30,7 @@ This script:
 ## Testing
 
 The test suite includes:
-- **39 functionality tests** (`tests/functionality/test*.l0`) - core language features; these tests cover all semantic aspects of the language LX++
+- **40 functionality tests** (`tests/functionality/test*.l0`) - core language features; these tests cover all semantic aspects of the language LX++
 - **8 syntactic tests** (`tests/syntax/test*.l0`) - syntactic errors; to help in the early stages of development
 - **18 typechecking tests** (`tests/typecheck/test*.l0`) - type errors; these include subtyping tests too
 

@@ -1,0 +1,9 @@
+type Base = struct { #id: int };
+type Extended = struct { #id: int, #name: string };
+
+let processBase: Base -> int = fn b:Base => { b.#id };
+let requireExtended: (Extended -> int) -> int = fn f => { 
+  f({ #id=42, #name="test" }) 
+};
+
+requireExtended(processBase);;
