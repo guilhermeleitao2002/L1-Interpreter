@@ -147,7 +147,7 @@ ASTNode Start():
 ASTNode Let() :
 {
   Token n; 
-  ASTNode t, e1, e2;
+  ASTNode t = null, e1, e2;
   ASTType typeExpr;
   List<Bind> decls = new ArrayList<Bind>();
   Map<String, ASTType> typeDefs = new HashMap<String, ASTType>();
